@@ -5,11 +5,6 @@ class Users::SessionsController < DeviseController
 
   def create
     user = User.from_omniauth(env["omniauth.auth"])
-    puts "YYYYYYYYYYYYYYYYYYYYYYYYYYY"
-    puts "YYYYYYYYYYYYYYYYYYYYYYYYYYY"
-    puts "YYYYYYYYYYYYYYYYYYYYYYYYYYY"
-    puts "YYYYYYYYYYYYYYYYYYYYYYYYYYY"
-    puts "YYYYYYYYYYYYYYYYYYYYYYYYYYY", session[:user_id].inspect
     session[:user_id] = user.id
     redirect_to root_url
   end
