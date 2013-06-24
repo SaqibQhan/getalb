@@ -5,3 +5,22 @@
 .ga-image-gallery img {
   cursor: pointer;
 }
+
+@mixin ga-single-border {
+  border: 1px solid #d3d3d3;
+}
+
+@mixin ga-double-border {
+  border: 2px solid #d3d3d3;
+}
+
+.ga-main-div {
+  @include ga-double-border;
+  width: 800px;
+  height: 450px;
+}
+
+.ga-tmpl {
+  @include ga-single-border;
+  cursor: pointer;
+}
