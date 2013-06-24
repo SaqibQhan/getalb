@@ -2,7 +2,7 @@ class HomeController < ApplicationController
   before_filter :facebook_auth
 
   def index
-    photos = []
+    @photos = []
     unless current_user.blank?
       #begin
       albums = @graph.get_connections("me", "albums", :fields => "name, photos.fields(source)")
@@ -11,7 +11,7 @@ class HomeController < ApplicationController
           unless albuminfo["photos"].blank?
             unless albuminfo["photos"]["data"].blank?
               albuminfo["photos"]["data"].each do |data|
-                photos << data["source"]
+                @photos << data["source"]
               end
             end
           end
