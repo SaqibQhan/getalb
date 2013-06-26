@@ -1,0 +1,39 @@
+<%= hidden_field_tag "clicked", "" %>
+<%= hidden_field_tag "index", "" %>
+<svg style="background-color: pink" version="1.1" height="450" width="800" id="template1s">
+  <defs>
+    <% for i in 1..3 %>
+        <pattern id="img<%= i %>" patternUnits="userSpaceOnUse" width="100" height="100">
+          <image xlink:href="" x="0" y="0" width="100" height="100" id="bac-image-<%= i %>"/>
+        </pattern>
+    <% end %>
+  </defs>
+
+  <circle stroke-width="2" fill="white" stroke="black" r="55" cy="70" cx="730" id="circle1" onclick="open_file(this, 1)"/>
+  <rect x="170" y="50" width="450" height="370" fill="white" id="rect1" onclick="open_file(this, 2)"/>
+  <circle fill="white" stroke-width="2" stroke="black" r="55" cy="70" cx="70" id="circle2" onclick="open_file(this, 3)"/>
+</svg>
+
+
+<%= file_field_tag "file_opener", :style => "display: none" %>
+
+<script>
+    $('#file_opener').change(function () {
+        readURL(this);
+    });
+    function readURL(input) {
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                var index = $('#index').val();
+                $('#bac-image-' + index).attr('xlink:href', e.target.result);
+                var clicked = $('#clicked').val();
+                $('#' + clicked).attr('fill', 'url(#img' + index + ')');
+                $('#clicked').val('');
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
