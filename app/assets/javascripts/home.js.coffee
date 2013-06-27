@@ -51,7 +51,8 @@ window.draw_template = (type) ->
 #
   $('#templ-container').show();
 
-window.open_file = (f, index) ->
+window.open_file = (f) ->
+  index = $(f).attr('alt')
   $('#file_opener').click()
   _val = $(f).attr('id')
   $('#clicked').val(_val)
