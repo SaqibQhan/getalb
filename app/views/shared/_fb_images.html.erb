@@ -1,9 +1,9 @@
 <% if user_signed_in? %>
     <ul class="thumbnails">
-      <li class="span3 ga-image-gallery">
+      <li class="span6 ga-image-gallery">
         <% unless @photos.blank? %>
             <% @photos.each do |photo| %>
-                <%= image_tag "#{photo}", :class => "img-rounded", :width => 50 %>
+                <%= image_tag "#{photo}", :class => "img-rounded draggable", :onclick => "choose_fb_image('#{photo}')" ,:width => 50 %>
             <% end %>
         <% end %>
       </li>

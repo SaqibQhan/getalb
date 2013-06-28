@@ -11,12 +11,10 @@ draw = (type, ctx, x, y, z, t, id) ->
     ctx.beginPath()
     ctx.arc(x, y, z, t, 2 * Math.PI)
     ctx.stroke()
-    ctx.id = id
   if type == 'rect'
     ctx.beginPath()
     ctx.rect(x, y, z, t)
     ctx.stroke()
-    ctx.id = id
 
 window.draw_template = (type) ->
 #  if type is "onet"
@@ -48,7 +46,6 @@ window.draw_template = (type) ->
 #    datapoints.rect[0]["t"], 'id2')
 #  draw('circle', ctx, datapoints.circle2[0]["x"], datapoints.circle2[0]["y"], datapoints.circle2[0]["z"],
 #    datapoints.circle2[0]["t"], 'id3')
-#
   $('#templ-container').show();
 
 window.open_file = (f) ->
@@ -57,3 +54,20 @@ window.open_file = (f) ->
   _val = $(f).attr('id')
   $('#clicked').val(_val)
   $('#index').val(index)
+
+window.open_dialog = (f) ->
+  index = $(f).attr('alt')
+  _val = $(f).attr('id')
+  $('#clicked').val(_val)
+  $('#index').val(index)
+  $('#myModal').modal()
+
+window.open_uploader = (f) ->
+  $('#file_opener').click()
+
+window.choose_fb_image = (photo) ->
+  index = $('#index').val()
+  $('#bac-image-' + index).attr('xlink:href', photo)
+  clicked = $('#clicked').val()
+  $('#' + clicked).attr('fill', 'url(#img' + index + ')').attr('onclick', "rotate(" + index + ")").attr('id', 'img')
+  $('#clicked').val('')

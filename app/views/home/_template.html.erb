@@ -12,13 +12,32 @@
 
     <% end %>
   </defs>
-  <circle stroke-width="2" fill="white" stroke="black" r="55" cy="70" cx="730" id="circle1" class="ga-svg" alt="1" onclick="open_file(this)"/>
-  <rect stroke-width="2" stroke="black" x="170" y="50" width="450" height="370" fill="white" id="rect1" alt="2" class="ga-svg" onclick="open_file(this)"/>
-  <circle fill="white" stroke-width="2" stroke="black" r="55" cy="70" cx="70" id="circle2" alt="3" class="ga-svg" onclick="open_file(this)"/>
+  <circle stroke-width="2" fill="white" stroke="black" r="55" cy="70" cx="730" id="circle1" class="ga-svg droppable" alt="1" onclick="<%= user_signed_in? ? 'open_dialog(this)' : 'open_file(this)' %>"/>
+  <rect stroke-width="2" stroke="black" x="170" y="50" width="450" height="370" fill="white" id="rect1" alt="2" class="ga-svg droppable" onclick="<%= user_signed_in? ? 'open_dialog(this)' : 'open_file(this)' %>"/>
+  <circle fill="white" stroke-width="2" stroke="black" r="55" cy="70" cx="70" id="circle2" alt="3" class="ga-svg droppable" onclick="<%= user_signed_in? ? 'open_dialog(this)' : 'open_file(this)' %>"/>
 </svg>
 
-<%= file_field_tag "file_opener", :style => "display: none" %>
+<!-- Modal -->
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Choose From</h3>
+  </div>
+  <div class="modal-body">
+    <div id="ga-chooser">
+      <p><%= link_to "Upload", "javascript:", :onclick => "open_uploader(this)" %></p>
 
+      <p>OR CHOOSE FROM </p>
+    </div>
+    <div id="ga-fb"><%= render "shared/fb_images" %></div>
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+  </div>
+</div>
+
+<%= file_field_tag "file_opener", :style => "display: none" %>
 
 <script>
     $('#file_opener').change(function () {
@@ -45,4 +64,8 @@
         $('#image' + index).val(pos);
         $('#bac-image-' + index).attr('transform', "rotate(" + pos + " 50 50)")
     }
+
+    $(document).ready(function () {
+    });
+
 </script>
