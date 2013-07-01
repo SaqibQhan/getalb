@@ -1,0 +1,30 @@
+<script>
+    $('#file_opener').change(function () {
+        readURL(this);
+    });
+    function readURL(input) {
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                var index = $('#index').val();
+                $('#bac-image-' + index).attr('xlink:href', e.target.result);
+                var clicked = $('#clicked').val();
+                $('#' + clicked).attr('fill', 'url(#img' + index + ')').attr('onclick', "rotate(" + index + ")").attr('id', 'img');
+                $('#clicked').val('');
+                $('#avatar' + index).val($('#file_opener').val())
+
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    function rotate(index) {
+        var pos = parseInt($('#image' + index).val());
+        pos = pos + 15;
+        $('#image' + index).val(pos);
+        $('#bac-image-' + index).attr('transform', "rotate(" + pos + " 50 50)")
+    }
+
+
+</script>

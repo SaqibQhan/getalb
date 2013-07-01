@@ -16,7 +16,7 @@ draw = (type, ctx, x, y, z, t, id) ->
     ctx.rect(x, y, z, t)
     ctx.stroke()
 
-window.draw_template = (type) ->
+window.draw_template = (id) ->
 #  if type is "onet"
 #    datapoints =
 #      circle1: [
@@ -46,7 +46,10 @@ window.draw_template = (type) ->
 #    datapoints.rect[0]["t"], 'id2')
 #  draw('circle', ctx, datapoints.circle2[0]["x"], datapoints.circle2[0]["y"], datapoints.circle2[0]["z"],
 #    datapoints.circle2[0]["t"], 'id3')
-  $('#templ-container').show();
+  $.ajax
+    url: "/albumes/rendering_template?id=" + id,
+    success: (data) ->
+      $("#templ-container").html data
 
 window.open_file = (f) ->
   index = $(f).attr('alt')
@@ -71,3 +74,6 @@ window.choose_fb_image = (photo) ->
   clicked = $('#clicked').val()
   $('#' + clicked).attr('fill', 'url(#img' + index + ')').attr('onclick', "rotate(" + index + ")").attr('id', 'img')
   $('#clicked').val('')
+  $('#avatar' + index).val(photo)
+
+

@@ -26,7 +26,7 @@ gem 'devise'
 gem 'omniauth-facebook'
 gem "koala", "~> 1.7.0rc1"
 gem 'execjs'
-
+gem 'paperclip'
 gem 'therubyracer'
 gem 'jquery-rails'
 
