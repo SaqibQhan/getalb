@@ -1,5 +1,5 @@
 <script>
-    $('#file_opener').change(function () {
+    $('.file_opener').change(function () {
         readURL(this);
     });
     function readURL(input) {
@@ -13,8 +13,7 @@
                 var clicked = $('#clicked').val();
                 $('#' + clicked).attr('fill', 'url(#img' + index + ')').attr('onclick', "rotate(" + index + ")").attr('id', 'img');
                 $('#clicked').val('');
-                $('#avatar' + index).val($('#file_opener').val())
-
+                $('#image_type' + index).val('upload');
             }
             reader.readAsDataURL(input.files[0]);
         }

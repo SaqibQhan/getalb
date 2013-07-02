@@ -2,6 +2,8 @@ class HomeController < ApplicationController
   before_filter :facebook_auth
 
   def index
+    @album = Album.find_by_id(params[:id]) unless params[:id].blank?
+    @album = Album.new if params[:id].blank?
     @templates = Template.all
     $photos = []
     unless current_user.blank?

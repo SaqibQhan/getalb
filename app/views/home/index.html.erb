@@ -1,5 +1,5 @@
 <% @templates.each do |f| %>
-    <canvas class="ga-tmpl" id='<%= f.title.downcase %>' width="<%= f.width %>" height="<%= f.height %>" onclick="draw_template('<%= f.id %>')">
+    <canvas class="ga-tmpl" id='<%= f.title.downcase %>' width="<%= f.width %>" height="<%= f.height %>" onclick="draw_template('<%= f.id %>', '<%= params[:id] %>', '<%= params[:page] %>')">
       Your browser does not support the HTML5 canvas tag.
     </canvas>
 <% end %>

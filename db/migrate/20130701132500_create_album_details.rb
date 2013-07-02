@@ -9,6 +9,7 @@ class CreateAlbumDetails < ActiveRecord::Migration
       t.string :photo_content_type
       t.integer :photo_file_size
       t.integer :rotate
+      t.string :image_type
       t.timestamps
     end
   end

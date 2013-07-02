@@ -1,6 +1,8 @@
 <%= hidden_field_tag "clicked", "" %>
 <%= hidden_field_tag "index", "" %>
-<%= form_for :album, :url => {:controller => :albumes, :action => :create_album, :id => @template.id}, :html => {:multipart => true} do |f| %>
+<%= link_to "Page #{params[:page].blank? ? 1 : params[:page]}", "javascript:", :class => "btn btn-success" %>
+<%= link_to "Back", "/?id=#{params[:id]}&page=#{params[:page].to_i - 1}", :class => "btn btn-success" unless params[:id].blank? %>
+<%= form_for :album, :url => {:controller => :albumes, :action => :create_album, :template_id => @template.id}, :html => {:multipart => true} do |f| %>
     <svg style="background-color: pink" version="1.1" height="450" width="800" id="templates-container" preserveAspectRatio="none">
       <defs>
         <% @shapes.each_with_index do |s, i| %>
@@ -19,9 +21,14 @@
       <% end %>
     </svg>
     <% @shapes.each_with_index do |s, c| %>
-        <%= file_field_tag "avatar#{c}", :style => "display: none" %>
         <%= hidden_field_tag "image#{ c + 1}", 0 %>
+        <%= file_field_tag "file_opener#{ c + 1}", :class => "file_opener", :style => "display: none" %>
+        <%= hidden_field_tag "image_type#{ c + 1}" "" %>
+        <%= hidden_field_tag "shape_id#{ c + 1}", s.id %>
+        <%= hidden_field_tag "fb_url#{ c + 1}", "" %>
     <% end %>
+    <%= hidden_field_tag "shapes_count", @shapes.count %>
+    <%= hidden_field_tag "page", params[:page].blank? ? 1 : params[:page] %>
 
     <%= f.submit "Save and Next", :class => "btn btn-primary" %>
 <% end %>
@@ -32,6 +39,5 @@
 </div>
 <!-- Modal end -->
 
-<%= file_field_tag "file_opener", :style => "display: none" %>
 
 <%= render "home/template_js" %>
