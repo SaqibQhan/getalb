@@ -8,6 +8,8 @@ class AlbumesController < ApplicationController
   def rendering_template
     @template = Template.find_by_id(params[:template_id])
     @shapes = Shape.find_all_by_template_id(@template.id)
+    @album = Album.find_by_id(params[:id]) if !params[:id].blank?
+    @album = Album.new if params[:id].blank?
     render "home/_template", :layout => false
   end
 

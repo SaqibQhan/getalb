@@ -1,23 +1,46 @@
 <%= hidden_field_tag "clicked", "" %>
 <%= hidden_field_tag "index", "" %>
 <%= link_to "Page #{params[:page].blank? ? 1 : params[:page]}", "javascript:", :class => "btn btn-success" %>
-<%= link_to "Back", "/?id=#{params[:id]}&page=#{params[:page].to_i - 1}", :class => "btn btn-success" unless params[:id].blank? %>
+<%= link_to "Back", "/?id=#{params[:id]}&page=#{params[:page].to_i - 1}", :class => "btn btn-success" if !params[:id].blank? and params[:page].to_i > 1 %>
 <%= form_for :album, :url => {:controller => :albumes, :action => :create_album, :template_id => @template.id}, :html => {:multipart => true} do |f| %>
     <svg style="background-color: pink" version="1.1" height="450" width="800" id="templates-container" preserveAspectRatio="none">
-      <defs>
-        <% @shapes.each_with_index do |s, i| %>
-            <pattern id="img<%= i + 1 %>" patternUnits="userSpaceOnUse" width="100" height="100">
-              <image xlink:href="" x="0" y="0" width="100" height="100" id="bac-image-<%= i + 1 %>"/>
-            </pattern>
-
-        <% end %>
-      </defs>
-      <% @shapes.each_with_index do |s, c| %>
-          <<%= s.type %> stroke-width="2" fill="white" stroke="black" width="<%= s.width %>" height="<%= s.height %>"
-          r="<%= s.r %>"
-          cy="<%= s.y %>" cx="<%= s.x %>" id="<%= s.type %><%= c + 1 %>" x="<%= s.x %>" y="<%= s.y %>" class="ga-svg
-          droppable" alt="<%= c + 1 %>"
-          onclick="<%= user_signed_in? ? 'open_dialog(this)' : 'open_file(this)' %>"/>
+      <% if @album.new_record? %>
+          <defs>
+            <% @shapes.each_with_index do |s, i| %>
+                <pattern id="img<%= i + 1 %>" patternUnits="userSpaceOnUse" width="100" height="100">
+                  <image xlink:href="" x="0" y="0" width="100" height="100" id="bac-image-<%= i + 1 %>"/>
+                </pattern>
+            <% end %>
+          </defs>
+      <% else %>
+          <defs>
+            <% @album_details.each_with_index do |s, i| %>
+                <pattern id="img<%= i + 1 %>" patternUnits="userSpaceOnUse" width="100" height="100">
+                  <image transform="rotate(<%= s.rotate %> 50 50)" xlink:href="<%= s.photo.url(:small) %>" x="0" y="0" width="100" height="100" id="bac-image-<%= i + 1 %>"/>
+                </pattern>
+            <% end %>
+          </defs>
+      <% end %>
+      <% if @album.new_record? %>
+          <% @shapes.each_with_index do |s, c| %>
+              <<%= s.type %> stroke-width="2" fill="white" stroke="black" width="<%= s.width %>"
+              height="<%= s.height %>"
+              r="<%= s.r %>"
+              cy="<%= s.y %>" cx="<%= s.x %>" id="<%= s.type %><%= c + 1 %>" x="<%= s.x %>" y="<%= s.y %>"
+              class="ga-svg droppable" alt="<%= c + 1 %>"
+              onclick="<%= user_signed_in? ? 'open_dialog(this)' : 'open_file(this)' %>"/>
+          <% end %>
+      <% else %>
+          <% @album_details.each_with_index do |s, c| %>
+              <<%= s.shape.type %> stroke-width="2" fill="url(#img<%= c + 1 %>)" stroke="black"
+              width="<%= s.shape.width %>"
+              height="<%= s.shape.height %>"
+              r="<%= s.shape.r %>"
+              cy="<%= s.shape.y %>" cx="<%= s.shape.x %>" id="<%= s.shape.type %><%= c + 1 %>" x="<%= s.shape.x %>"
+              y="<%= s.shape.y %>"
+              class="ga-svg droppable" alt="<%= c + 1 %>"
+              onclick="<%= user_signed_in? ? 'open_dialog(this)' : 'open_file(this)' %>"/>
+          <% end %>
       <% end %>
     </svg>
     <% @shapes.each_with_index do |s, c| %>
@@ -41,3 +64,4 @@
 
 
 <%= render "home/template_js" %>
+
