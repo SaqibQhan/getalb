@@ -12,6 +12,7 @@ Getalb::Application.routes.draw do
     collection do
       get :rendering_template
       post :create_album
+      post :update_album
     end
   end
   root :to => 'home#index'

@@ -4,5 +4,5 @@
     </canvas>
 <% end %>
 <div id="templ-container">
-  <%= render "home/template" unless params[:id].blank? %>
+  <%= render "home/template" if !params[:id].blank? and !@album_details.blank? %>
 </div>

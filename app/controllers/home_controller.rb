@@ -6,8 +6,8 @@ class HomeController < ApplicationController
     @album = Album.new if params[:id].blank?
     @templates = Template.all
     @album_details = AlbumDetail.find_all_by_album_id_and_page(@album.id, params[:page]) if !params[:id].blank?
-    @template = @album_details.first if !params[:id].blank?
-    @shapes = Shape.find_all_by_template_id(@template.template_id) if !params[:id].blank?
+    @template = @album_details.first if !params[:id].blank? and !@album_details.blank?
+    @shapes = Shape.find_all_by_template_id(@template.template_id) if !params[:id].blank? and !@template.blank?
     $photos = []
     unless current_user.blank?
       begin
