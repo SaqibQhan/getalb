@@ -1,3 +1,16 @@
-// Place all the styles related to the albumes controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+@import "primary.css.scss";
+
+.ga-filled-label {
+  background: none repeat scroll 0 0 lightgreen;
+  font-weight: bold;
+  height: 25px;
+  line-height: 26px;
+  text-align: center;
+  width: 100px;
+}
+
+span.error {
+  color: red;
+  font-size: 12px;
+  margin-left: 10px;
+}

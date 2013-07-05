@@ -1,9 +1,9 @@
 <%= hidden_field_tag "clicked", "" %>
 <%= hidden_field_tag "index", "" %>
-<%= link_to "Page #{params[:page].blank? ? 1 : params[:page]}", "javascript:", :class => "btn btn-success" %>
-<%= link_to "Back", "/?id=#{params[:id]}&page=#{params[:page].to_i - 1}", :class => "btn btn-success" if !params[:id].blank? and params[:page].to_i > 1 %>
+<span class="badge badge-success"> Page <%= params[:page].blank? ? 1 : params[:page] %> </span>
+<%= link_to "Back", "/index?id=#{params[:id]}&page=#{params[:page].to_i - 1}", :class => "btn btn-success" if !params[:id].blank? and params[:page].to_i > 1 %>
 <%= form_for :album, :url => "albumes/#{album_exist(@album, @album_details) == true ? 'create_album' : 'update_album'}?template_id=#{@template.id}&new_album=#{@album.new_record? ? nil : @album.id}", :html => {:multipart => true} do |f| %>
-    <svg style="background-color: pink" version="1.1" height="450" width="800" id="templates-container" preserveAspectRatio="none">
+    <svg style="background-color: pink" version="1.1" height="475" width="800" id="templates-container" preserveAspectRatio="none">
       <% if album_exist(@album, @album_details) %>
           <defs>
             <% @shapes.each_with_index do |s, i| %>
@@ -76,4 +76,3 @@
 
 
 <%= render "home/template_js" %>
-

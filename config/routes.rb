@@ -15,6 +15,7 @@ Getalb::Application.routes.draw do
       post :update_album
     end
   end
-  root :to => 'home#index'
+  match "/index", to: 'home#index'
+  root :to => 'albumes#new'
 
 end

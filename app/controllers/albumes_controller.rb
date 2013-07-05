@@ -1,8 +1,16 @@
 class AlbumesController < ApplicationController
-  #before_filter :authenticate_user!, :only => [:create_album]
+  before_filter :fb_sign_in, :except => [:new]
 
   def new
+    @album = Album.new
+  end
 
+  def create
+    album = Album.new(params[:album])
+    if album.save
+      album.update_attributes(:user_id => current_user.id)
+      redirect_to "/index?id=#{album.id}&page=1"
+    end
   end
 
   def rendering_template
@@ -25,7 +33,7 @@ class AlbumesController < ApplicationController
       album_page_photo = AlbumDetail.new.photo_from_url(params["fb_url#{i}"], album_page) if image_type == "fb" and !params["fb_url#{i}"].blank?
       album_pages = album_page.update_attributes(:image_type => image_type) if !params["fb_url#{i}"].blank? or !params["file_opener#{i}"].blank?
     end
-    redirect_to "/?id=#{album.id}&page=#{ params[:page].to_i + 1}"
+    redirect_to "/index?id=#{album.id}&page=#{ params[:page].to_i + 1}"
   end
 
   def update_album
@@ -39,7 +47,7 @@ class AlbumesController < ApplicationController
       album_page_photo = AlbumDetail.new.photo_from_url(params["fb_url#{i}"], album_detail) if image_type == "fb" and !params["fb_url#{i}"].blank?
       album_pages = album_detail.update_attributes(:image_type => image_type) if !params["fb_url#{i}"].blank? or !params["file_opener#{i}"].blank?
     end
-    redirect_to "/?id=#{album.id}&page=#{ params[:page].to_i + 1}"
+    redirect_to "/index?id=#{album.id}&page=#{ params[:page].to_i + 1}"
   end
 
 

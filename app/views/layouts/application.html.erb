@@ -19,9 +19,11 @@
 <div class="container">
   <div class="row">
     <div class="span9"><%= yield %></div>
-    <div class="span3">
-      <%#= render "shared/fb_images" %>
-    </div>
+    <% if user_signed_in? %>
+        <div class="span3">
+          <%= render "shared/user_albums" %>
+        </div>
+    <% end %>
   </div>
 </div>
 

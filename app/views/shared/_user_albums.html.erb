@@ -1,0 +1,12 @@
+<% unless $user_albums.blank? %>
+    <% $user_albums.each do |user_album| %>
+        <ul>
+          <% unless user_album.id == @album.id %>
+              <li>
+
+                <%= link_to user_album.title.blank? ? 'Untitled' : user_album.title, "/index?id=#{user_album.id}&page=1" %>
+              </li>
+          <% end %>
+        </ul>
+    <% end %>
+<% end %>

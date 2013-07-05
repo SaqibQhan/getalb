@@ -13,6 +13,9 @@
 //= require jquery
 //= require jquery_ujs
 //= require twitter/bootstrap
+//= require jquery.form.js
+//= require jquery.validate.js
+//= require validations
 //= require_tree .
 
 

@@ -1,7 +1,9 @@
 class HomeController < ApplicationController
+  before_filter :fb_sign_in
   before_filter :facebook_auth
 
   def index
+    $user_albums = current_user.albums unless current_user.blank?
     @album = Album.find_by_id(params[:id]) if !params[:id].blank?
     @album = Album.new if params[:id].blank?
     @templates = Template.all
@@ -30,8 +32,8 @@ class HomeController < ApplicationController
   end
 
   def facebook_auth
-    @oauth = Koala::Facebook::OAuth.new(FB_APP_ID, FB_SECRET_KEY, FB_CALLBACK_URL)
-    @graph = Koala::Facebook::GraphAPI.new(current_user.oauth_token) if current_user
+      @oauth = Koala::Facebook::OAuth.new(FB_APP_ID, FB_SECRET_KEY, FB_CALLBACK_URL)
+      @graph = Koala::Facebook::GraphAPI.new(current_user.oauth_token) if current_user
   end
 
 end

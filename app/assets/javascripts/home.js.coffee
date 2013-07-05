@@ -1,9 +1,10 @@
 $ ->
-  c = $("#template1")[0]
-  ctx = c.getContext("2d")
-  draw('circle', ctx, 20, 20, 10, 0)
-  draw('rect', ctx, 55, 20, 90, 60)
-  draw('circle', ctx, 180, 20, 10, 0)
+  try
+    c = $("#template1")[0]
+    ctx = c.getContext("2d")
+    draw('circle', ctx, 20, 20, 10, 0)
+    draw('rect', ctx, 55, 20, 90, 60)
+    draw('circle', ctx, 180, 20, 10, 0)
 
 
 draw = (type, ctx, x, y, z, t, id) ->
