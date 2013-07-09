@@ -5,7 +5,7 @@ Getalb::Application.routes.draw do
   devise_scope :user do
     match 'auth/:provider/callback', to: 'users/sessions#create'
     match 'auth/failure', to: redirect('/')
-    match 'signout', to: 'users/sessions#destroy', as: 'signout'
+    match 'signout', to: 'devise/sessions#destroy', as: 'signout'
   end
 
   resources :albumes do
