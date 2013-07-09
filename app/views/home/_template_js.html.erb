@@ -9,11 +9,19 @@
 
             reader.onload = function (e) {
                 var index = $('#index').val();
-                $('#bac-image-' + index).attr('xlink:href', e.target.result);
-                var clicked = $('#clicked').val();
-                $('#' + clicked).attr('fill', 'url(#img' + index + ')').attr('onclick', "rotate(" + index + ")").attr('id', 'img');
-                $('#clicked').val('');
-                $('#image_type' + index).val('upload');
+                if (index != 'svg-index') {
+                    $('#bac-image-' + index).attr('xlink:href', e.target.result);
+                    var clicked = $('#clicked').val();
+                    $('#' + clicked).attr('fill', 'url(#img' + index + ')').attr('onclick', "rotate(" + index + ")").attr('id', 'img');
+                    $('#clicked').val('');
+                    $('#image_type' + index).val('upload');
+                }
+                else {
+                    $('#templates-container').css('background', "url('" + e.target.result + "')");
+                    $('#templates-container').attr('onclick', '');
+                    $('#clicked').val('');
+                    $('#svg_image_type').val('upload');
+                }
             }
             reader.readAsDataURL(input.files[0]);
         }
@@ -25,5 +33,10 @@
         $('#bac-image-' + index).attr('transform', "rotate(" + pos + " 50 50)")
     }
 
+    $(document).ready(function () {
+        $(".ga-svg").click(function (event) {
+            event.stopPropagation();
+        })
 
+    });
 </script>

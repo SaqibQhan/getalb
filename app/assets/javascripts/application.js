@@ -17,5 +17,3 @@
 //= require jquery.validate.js
 //= require validations
 //= require_tree .
-
-

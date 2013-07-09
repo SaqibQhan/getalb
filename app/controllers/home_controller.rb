@@ -7,9 +7,11 @@ class HomeController < ApplicationController
     @album = Album.find_by_id(params[:id]) if !params[:id].blank?
     @album = Album.new if params[:id].blank?
     @templates = Template.all
-    @album_details = AlbumDetail.find_all_by_album_id_and_page(@album.id, params[:page]) if !params[:id].blank?
+    @album_details = AlbumDetail.where('album_id = ? and page = ? and shape_id != ?', @album.id, params[:page], Shape.find_by_type('svg').id) if !params[:id].blank?
     @template = @album_details.first if !params[:id].blank? and !@album_details.blank?
-    @shapes = Shape.find_all_by_template_id(@template.template_id) if !params[:id].blank? and !@template.blank?
+    @shapes = Shape.where('template_id = ? and title != ? ', @template.template_id, 'svg') if !params[:id].blank? and !@template.blank?
+    @svg_background = AlbumDetail.find_by_album_id_and_page_and_shape_id(@album.id, params[:page], Shape.find_by_type('svg').id) if !params[:id].blank? and !@album_details.blank?
+
     $photos = []
     unless current_user.blank?
       begin
@@ -32,8 +34,8 @@ class HomeController < ApplicationController
   end
 
   def facebook_auth
-      @oauth = Koala::Facebook::OAuth.new(FB_APP_ID, FB_SECRET_KEY, FB_CALLBACK_URL)
-      @graph = Koala::Facebook::GraphAPI.new(current_user.oauth_token) if current_user
+    @oauth = Koala::Facebook::OAuth.new(FB_APP_ID, FB_SECRET_KEY, FB_CALLBACK_URL)
+    @graph = Koala::Facebook::GraphAPI.new(current_user.oauth_token) if current_user
   end
 
 end

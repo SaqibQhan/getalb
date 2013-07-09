@@ -3,7 +3,7 @@
 <span class="badge badge-success"> Page <%= params[:page].blank? ? 1 : params[:page] %> </span>
 <%= link_to "Back", "/index?id=#{params[:id]}&page=#{params[:page].to_i - 1}", :class => "btn btn-success" if !params[:id].blank? and params[:page].to_i > 1 %>
 <%= form_for :album, :url => "albumes/#{album_exist(@album, @album_details) == true ? 'create_album' : 'update_album'}?template_id=#{@template.id}&new_album=#{@album.new_record? ? nil : @album.id}", :html => {:multipart => true} do |f| %>
-    <svg style="background-color: pink" version="1.1" height="475" width="800" id="templates-container" preserveAspectRatio="none">
+    <svg onclick="open_dialog_svg(this)" style="border: 2px solid black; background: <%= album_exist(@album, @album_details) == false ? "url('#{@svg_background.photo.url}')" : '' %>" version="1.1" height="475" width="800" id="templates-container" preserveAspectRatio="none">
       <% if album_exist(@album, @album_details) %>
           <defs>
             <% @shapes.each_with_index do |s, i| %>
@@ -64,6 +64,9 @@
         <%= hidden_field_tag "shapes_count", @album_details.count %>
     <% end %>
     <%= hidden_field_tag "page", params[:page].blank? ? 1 : params[:page] %>
+    <%= file_field_tag "file_openersvg-index", :class => "file_opener", :style => "display: none" %>
+    <%= hidden_field_tag "svg_fb_url", "" %>
+    <%= hidden_field_tag "svg_image_type", "" %>
 
     <%= f.submit "#{album_exist(@album, @album_details) == true ? 'Save & Next' : 'Update & Next' }", :class => "btn btn-primary" %>
 <% end %>

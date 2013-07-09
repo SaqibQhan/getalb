@@ -4,12 +4,12 @@
 
       <p>Its as simple as that</p>
 
-        <%= form_for :album, :url => "/albumes" , :html => {:id => 'ga-create-album'} do |f| %>
-            <%= f.label :title %>
-            <%= f.text_field :title %>
+      <%= form_for :album, :url => "/albumes", :html => {:id => 'ga-create-album'} do |f| %>
+          <%= f.label :title %>
+          <%= f.text_field :title %>
 
-            <%= f.label :num_of_pages %>
-            <%= f.select :num_of_pages, options_for_select([12] + [15] + [20] + [21]) %>
+          <%= f.label :num_of_pages %>
+          <%= f.select :num_of_pages, options_for_select([12] + [15] + [20] + [21]) %>
 
 
           <div> <%= f.submit :class => "btn btn-success" %></div>
@@ -17,7 +17,7 @@
       <% end %>
     </div>
 <% else %>
-    <%= link_to "Sign in with Facebook", "/auth/facebook", id: "sign_in", :class => "btn btn-primary btn-large" unless user_signed_in? %>
+    <%= link_to "Log in with Facebook", "javascript:", :href => '/auth/facebook', :class => "popup btn btn-primary btn-large", :"data-width" => 600, :"data-height" => 400 unless user_signed_in? %>
 <% end %>
 
 
