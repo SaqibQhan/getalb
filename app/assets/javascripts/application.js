@@ -16,4 +16,9 @@
 //= require jquery.form.js
 //= require jquery.validate.js
 //= require validations
+//= require base64
+//= require canvas2image
+//= require canvg-1.3/canvg.js
+//= require canvg-1.3/rgbcolor
+//= require canvg-1.3/StackBlur
 //= require_tree .

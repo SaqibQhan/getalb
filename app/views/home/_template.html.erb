@@ -3,6 +3,7 @@
 <span class="badge badge-success"> Page <%= params[:page].blank? ? 1 : params[:page] %> </span>
 <%= link_to "Back", "/index?id=#{params[:id]}&page=#{params[:page].to_i - 1}", :class => "btn btn-success" if !params[:id].blank? and params[:page].to_i > 1 %>
 <%= form_for :album, :url => "albumes/#{album_exist(@album, @album_details) == true ? 'create_album' : 'update_album'}?template_id=#{@template.id}&new_album=#{@album.new_record? ? nil : @album.id}", :html => {:multipart => true} do |f| %>
+    <canvas id="canvas" style="display:none;"></canvas>
     <svg onclick="open_dialog_svg(this)" style="border: 2px solid black; background: <%= album_exist(@album, @album_details) == false ? "url('#{@svg_background.photo.url}')" : '' %>" version="1.1" height="475" width="800" id="templates-container" preserveAspectRatio="none">
       <% if album_exist(@album, @album_details) %>
           <defs>
@@ -79,3 +80,11 @@
 
 
 <%= render "home/template_js" %>
+
+<script type="text/javascript">
+    svg = $('#templates-container').html()
+    canvg('canvas', svg)
+    canvas = document.getElementById("canvas")
+    img_PNG = Canvas2Image.saveAsPNG(canvas, true)
+    //    $('.chart').html(img_PNG)
+</script>
