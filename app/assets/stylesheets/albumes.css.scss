@@ -14,3 +14,18 @@ span.error {
   font-size: 12px;
   margin-left: 10px;
 }
+
+svg {
+  background: none repeat scroll 0 0 #777777;
+  height: 465px;
+  width: 851px;
+}
+
+.ga-svg-cont {
+  background: none repeat scroll 0 0 white;
+  width: 852px;
+  z-index: 1;
+  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.3);
+  padding: 5px 5px 1px;
+  margin: 16px auto 15px;
+}

@@ -1,8 +1,22 @@
-<% @templates.each do |f| %>
-    <canvas class="ga-tmpl" id='<%= f.title.downcase %>' width="<%= f.width %>" height="<%= f.height %>" onclick="draw_template('<%= f.id %>', '<%= params[:id] %>', '<%= params[:page] %>')">
-      Your browser does not support the HTML5 canvas tag.
-    </canvas>
-<% end %>
+<div id="ca-container" class="ca-container">
+  <div class="ca-wrapper">
+    <% @templates.each do |f| %>
+        <% for i in 1..6 %>
+            <div class="ca-item ca-item-<%= i %>">
+              <canvas class="ga-tmpl" id='<%= f.title.downcase %>' width="<%= f.width %>" height="<%= f.height %>" onclick="draw_template('<%= f.id %>', '<%= params[:id] %>', '<%= params[:page] %>')">
+                Your browser does not support the HTML5 canvas tag.
+              </canvas>
+            </div>
+        <% end %>
+    <% end %>
+  </div>
+</div>
+
 <div id="templ-container">
   <%= render "home/template" if !params[:id].blank? and !@album_details.blank? %>
 </div>
+
+
+<script type="text/javascript">
+    $('#ca-container').contentcarousel();
+</script>

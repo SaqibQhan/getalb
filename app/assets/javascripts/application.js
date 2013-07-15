@@ -21,4 +21,7 @@
 //= require canvg-1.3/canvg.js
 //= require canvg-1.3/rgbcolor
 //= require canvg-1.3/StackBlur
+//= require circularcontent/jquery.contentcarousel
+//= require circularcontent/jquery.easing.1.3
+//= require circularcontent/jquery.mousewheel
 //= require_tree .
