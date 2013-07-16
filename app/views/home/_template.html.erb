@@ -5,20 +5,20 @@
 <%= form_for :album, :url => "albumes/#{album_exist(@album, @album_details) == true ? 'create_album' : 'update_album'}?template_id=#{@template.id}&new_album=#{@album.new_record? ? nil : @album.id}", :html => {:multipart => true} do |f| %>
     <canvas id="canvas" style="display:none;"></canvas>
     <div id="ga-svg-cont" class="ga-svg-cont">
-      <svg xmlns="http://www.w3.org/2000/svg" version="1.1" onclick="open_dialog_svg(this)" style="background: <%= album_exist(@album, @album_details) == false ? "url('#{@svg_background.photo.url}')" : '' %>" version="1.1" height="475" width="800" id="templates-container" preserveAspectRatio="none">
+      <svg xmlns="http://www.w3.org/2000/svg" version="1.1" onclick="open_dialog_svg(this)" style="background: <%= album_exist(@album, @album_details) == false ? "url('#{@svg_background.photo.url}') no-repeat" : '' %>" version="1.1" height="475" width="800" id="templates-container">
         <% if album_exist(@album, @album_details) %>
             <defs>
               <% @shapes.each_with_index do |s, i| %>
-                  <pattern id="img<%= i + 1 %>" patternUnits="userSpaceOnUse" width="100" height="100">
-                    <image xlink:href="" x="0" y="0" width="100" height="100" id="bac-image-<%= i + 1 %>"/>
+                  <pattern id="img<%= i + 1 %>" width="33" height="18">
+                    <image xlink:href="" x="0" y="0" width="800" height="500" id="bac-image-<%= i + 1 %>"/>
                   </pattern>
               <% end %>
             </defs>
         <% else %>
             <defs>
               <% @album_details.each_with_index do |s, i| %>
-                  <pattern id="img<%= i + 1 %>" patternUnits="userSpaceOnUse" width="100" height="100">
-                    <image transform="rotate(<%= s.rotate %> 50 50)" xlink:href="<%= s.photo.url(:small) %>" x="0" y="0" width="100" height="100" id="bac-image-<%= i + 1 %>"/>
+                  <pattern id="img<%= i + 1 %>" width="33" height="18">
+                    <image transform="rotate(<%= s.rotate %> 50 50)" xlink:href="<%= s.photo.url(:small) %>" x="0" y="0" width="800" height="500" id="bac-image-<%= i + 1 %>"/>
                   </pattern>
               <% end %>
             </defs>
@@ -82,6 +82,7 @@
 <%= render "home/template_js" %>
 
 <script type="text/javascript">
+
     function download_svg() {
         svg = $('#ga-svg-cont').html();
 //       WORKING svg = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1"  height="475" width="800"><circle stroke-width="2" fill="url(#img1)" stroke="black" width="" height="" r="55" cy="70" cx="730" id="circle1" x="730" y="70" class="ga-svg droppable" alt="1"></circle></svg>'

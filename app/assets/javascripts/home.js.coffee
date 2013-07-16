@@ -85,7 +85,7 @@ window.choose_fb_image = (photo) ->
     $('#image_type' + index).val('fb')
     $('#fb_url' + index).val(photo)
   else
-    $('#templates-container').css('background', "url('" + photo + "')");
+    $('#templates-container').css('background', "url('" + photo + "') no-repeat");
     $('#templates-container').attr('onclick', '');
     $('#clicked').val('');
     $('#svg_image_type').val('fb')

@@ -180,7 +180,7 @@
 .ca-nav span{
 	width:25px;
 	height:38px;
-	background:transparent url(../image/arrows.png) no-repeat top left;
+	background:transparent url(/assets/arrows.png) no-repeat top left;
 	position:absolute;
 	top: 38%;
 	margin-top:-19px;
