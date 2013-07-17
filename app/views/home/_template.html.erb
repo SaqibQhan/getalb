@@ -19,7 +19,7 @@
             <defs>
               <% @album_details.each_with_index do |s, i| %>
                   <pattern id="img<%= i + 1 %>" width="33" height="18">
-                    <image transform="rotate(<%= s.rotate %> 50 50)" xlink:href="<%= s.photo.url(:small) %>" x="0" y="0" width="800" height="500" id="bac-image-<%= i + 1 %>"/>
+                    <image transform="rotate(<%= s.rotate %> 50 50) scale(<%= s.scale %>)" xlink:href="<%= s.photo.url %>" x="0" y="0" width="800" height="500" id="bac-image-<%= i + 1 %>"/>
                   </pattern>
               <% end %>
             </defs>
@@ -50,6 +50,7 @@
     <% if album_exist(@album, @album_details) %>
         <% @shapes.each_with_index do |s, c| %>
             <%= hidden_field_tag "image#{ c + 1}", 0 %>
+            <%= hidden_field_tag "scale#{ c + 1}", 0.9 %>
             <%= file_field_tag "file_opener#{ c + 1}", :class => "file_opener", :style => "display: none" %>
             <%= hidden_field_tag "image_type#{ c + 1}" "" %>
             <%= hidden_field_tag "shape_id#{ c + 1}", s.id %>
@@ -60,6 +61,7 @@
     <% else %>
         <% @album_details.each_with_index do |s, c| %>
             <%= hidden_field_tag "image#{ c + 1}", s.rotate %>
+            <%= hidden_field_tag "scale#{ c + 1}", s.scale %>
             <%= file_field_tag "file_opener#{ c + 1}", :class => "file_opener", :style => "display: none" %>
             <%= hidden_field_tag "image_type#{ c + 1}", s.image_type %>
             <%= hidden_field_tag "shape_id#{ c + 1}", s.shape_id %>
@@ -123,6 +125,7 @@
                 rotate_pos = $("#slider_rotate").slider("value");
                 scale_pos = $("#slider_scale").slider("value");
                 index = $('#selected').val();
+                $('#scale' + index).val(scale_pos);
                 $('#bac-image-' + index).attr('transform', "rotate(" + rotate_pos + " 50 50) scale(" + scale_pos + ")");
             }
         });
