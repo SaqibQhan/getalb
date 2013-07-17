@@ -80,7 +80,9 @@ window.choose_fb_image = (photo) ->
   if index != 'svg-index'
     $('#bac-image-' + index).attr('xlink:href', photo)
     clicked = $('#clicked').val()
-    $('#' + clicked).attr('fill', 'url(#img' + index + ')').attr('onclick', "rotate(" + index + ")").attr('id', 'img')
+    #    $('#' + clicked).attr('fill', 'url(#img' + index + ')').attr('onclick', "rotate(" + index + ")").attr('id', 'img')
+    $('#' + clicked).attr('fill', 'url(#img' + index + ')').attr('onclick', "sliders(" + index + ")").attr('id',
+      'img_' + index)
     $('#clicked').val('')
     $('#image_type' + index).val('fb')
     $('#fb_url' + index).val(photo)

@@ -12,7 +12,8 @@
                 if (index != 'svg-index') {
                     $('#bac-image-' + index).attr('xlink:href', e.target.result);
                     var clicked = $('#clicked').val();
-                    $('#' + clicked).attr('fill', 'url(#img' + index + ')').attr('onclick', "rotate(" + index + ")").attr('id', 'img');
+//                    $('#' + clicked).attr('fill', 'url(#img' + index + ')').attr('onclick', "rotate(" + index + ")").attr('id', 'img');
+                    $('#' + clicked).attr('fill', 'url(#img' + index + ')').attr('onclick', "sliders(" + index + ")").attr('id', 'img_' + index);
                     $('#clicked').val('');
                     $('#image_type' + index).val('upload');
                 }
@@ -31,6 +32,14 @@
         pos = pos + 15;
         $('#image' + index).val(pos);
         $('#bac-image-' + index).attr('transform', "rotate(" + pos + " 50 50)")
+    }
+
+    function sliders(index) {
+        $('#slider-container').show();
+        $('#selected').val(index);
+        $('.ga-svg').attr('class', 'ga-shadow');
+        $('#img_' + index).attr('class', 'ga-svg');
+
     }
 
     $(document).ready(function () {

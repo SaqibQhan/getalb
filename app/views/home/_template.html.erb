@@ -1,5 +1,6 @@
 <%= hidden_field_tag "clicked", "" %>
 <%= hidden_field_tag "index", "" %>
+<%= hidden_field_tag "selected", "" %>
 <span class="badge badge-success"> Page <%= params[:page].blank? ? 1 : params[:page] %> </span>
 <%= link_to "Back", "/index?id=#{params[:id]}&page=#{params[:page].to_i - 1}", :class => "btn btn-success" if !params[:id].blank? and params[:page].to_i > 1 %>
 <%= form_for :album, :url => "albumes/#{album_exist(@album, @album_details) == true ? 'create_album' : 'update_album'}?template_id=#{@template.id}&new_album=#{@album.new_record? ? nil : @album.id}", :html => {:multipart => true} do |f| %>
@@ -29,7 +30,7 @@
                 height="<%= s.height %>"
                 r="<%= s.r %>"
                 cy="<%= s.y %>" cx="<%= s.x %>" id="<%= s.type %><%= c + 1 %>" x="<%= s.x %>" y="<%= s.y %>"
-                class="ga-svg droppable" alt="<%= c + 1 %>"
+                class="ga-svg ga-svg-<%= c + 1 %>" alt="<%= c + 1 %>"
                 onclick="<%= user_signed_in? ? 'open_dialog(this)' : 'open_file(this)' %>"/>
             <% end %>
         <% else %>
@@ -40,7 +41,7 @@
                 r="<%= s.shape.r %>"
                 cy="<%= s.shape.y %>" cx="<%= s.shape.x %>" id="<%= s.shape.type %><%= c + 1 %>" x="<%= s.shape.x %>"
                 y="<%= s.shape.y %>"
-                class="ga-svg droppable" alt="<%= c + 1 %>"
+                class="ga-svg ga-svg-<%= c + 1 %>" alt="<%= c + 1 %>"
                 onclick="<%= user_signed_in? ? 'open_dialog(this)' : 'open_file(this)' %>"/>
             <% end %>
         <% end %>
@@ -80,9 +81,16 @@
 <!-- Modal end -->
 <%= link_to "Download", "javascript:", :onclick => "download_svg()" %>
 <%= render "home/template_js" %>
+<div id="slider-container" style="display: none">
+  <label> Rotate </label>
+
+  <div id="slider_rotate" class="ga-slider"></div>
+  <label> Scale </label>
+
+  <div id="slider_scale" class="ga-slider"></div>
+</div>
 
 <script type="text/javascript">
-
     function download_svg() {
         svg = $('#ga-svg-cont').html();
 //       WORKING svg = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1"  height="475" width="800"><circle stroke-width="2" fill="url(#img1)" stroke="black" width="" height="" r="55" cy="70" cx="730" id="circle1" x="730" y="70" class="ga-svg droppable" alt="1"></circle></svg>'
@@ -91,4 +99,33 @@
         img_PNG = Canvas2Image.saveAsPNG(canvas);
 
     }
+
+    $(function () {
+        $("#slider_rotate").slider({
+            value: 0,
+            min: 0,
+            max: 720,
+            step: 5,
+            slide: function (event, ui) {
+                rotate_pos = $("#slider_rotate").slider("value");
+                scale_pos = $("#slider_scale").slider("value");
+                index = $('#selected').val();
+                $('#image' + index).val(rotate_pos);
+                $('#bac-image-' + index).attr('transform', "rotate(" + rotate_pos + " 50 50) scale(" + scale_pos + ")");
+            }
+        });
+        $("#slider_scale").slider({
+            value: .9,
+            min: .1,
+            max: .9,
+            step: .1,
+            slide: function (event, ui) {
+                rotate_pos = $("#slider_rotate").slider("value");
+                scale_pos = $("#slider_scale").slider("value");
+                index = $('#selected').val();
+                $('#bac-image-' + index).attr('transform', "rotate(" + rotate_pos + " 50 50) scale(" + scale_pos + ")");
+            }
+        });
+
+    });
 </script>

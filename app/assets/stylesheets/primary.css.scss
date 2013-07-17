@@ -1,6 +1,7 @@
 body {
   background: url("/assets/bg_noise-0af71b3ff077b9b82393ca66466abb80.jpg") repeat scroll left top #EFEFEF;
 }
+
 .ga-image-gallery {
   float: left;
 }
@@ -28,3 +29,12 @@ body {
   cursor: pointer;
 }
 
+.ga-slider {
+  width: 200px;
+}
+
+.ga-shadow {
+  background-color: black;
+  position: absolute;
+  opacity: 0.4;
+}
