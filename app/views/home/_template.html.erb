@@ -6,7 +6,7 @@
 <%= form_for :album, :url => "albumes/#{album_exist(@album, @album_details) == true ? 'create_album' : 'update_album'}?template_id=#{@template.id}&new_album=#{@album.new_record? ? nil : @album.id}", :html => {:multipart => true} do |f| %>
     <canvas id="canvas" style="display:none;"></canvas>
     <div id="ga-svg-cont" class="ga-svg-cont">
-      <svg xmlns="http://www.w3.org/2000/svg" version="1.1" onclick="open_dialog_svg(this)" style="background: <%= album_exist(@album, @album_details) == false ? "url('#{@svg_background.photo.url}') no-repeat" : '' %>" version="1.1" height="475" width="800" id="templates-container">
+      <svg xmlns="http://www.w3.org/2000/svg" version="1.1" onclick="open_dialog_svg(this)" style="background: <%= album_exist(@album, @album_details) == false ? "url('#{@svg_background.photo.url}') no-repeat" : '' %>" height="475" width="800" id="templates-container">
         <% if album_exist(@album, @album_details) %>
             <defs>
               <% @shapes.each_with_index do |s, i| %>
@@ -131,4 +131,42 @@
         });
 
     });
+</script>
+<!--<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="200" width="200">-->
+  <!--<circle alt="3" class="ui-draggable draggable" y="70" x="70" id="circle5" cx="70" cy="70" r="55" height="" width="" stroke="white" fill="url(#img3)" stroke-width="2"/>-->
+<!--</svg>-->
+<!--<div id="frame">-->
+  <!--<div id="content"></div>-->
+<!--</div>-->
+<script>
+    $(function () {
+        $(".draggable").draggable();
+    });
+
+    $(document).ready(function () {
+//        var R = Raphael("content", 500, 500);
+//        var d = R.image("/assets/rails.png", 10, 10, 10)
+//        var c = R.circle(100, 100, 50).attr({
+//            fill: "hsb(.8, 1, 1)",
+//            stroke: "none",
+//            opacity: .5
+//        });
+//        var start = function () {
+                    // storing original coordinates
+//                    this.ox = this.attr("cx");
+//                    this.oy = this.attr("cy");
+//                    this.attr({opacity: 1});
+//                },
+//                move = function (dx, dy) {
+//                    // move will be called with dx and dy
+//                    this.attr({cx: this.ox + dx, cy: this.oy + dy});
+//                },
+//                up = function () {
+//                    // restoring state
+//                    this.attr({opacity: .5});
+//                };
+//        c.drag(move, start, up);
+
+    });
+
 </script>

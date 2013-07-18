@@ -25,4 +25,5 @@
 //= require circularcontent/jquery.contentcarousel
 //= require circularcontent/jquery.easing.1.3
 //= require circularcontent/jquery.mousewheel
+//= require raphael-min
 //= require_tree .
