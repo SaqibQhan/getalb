@@ -11,7 +11,7 @@
             <defs>
               <% @shapes.each_with_index do |s, i| %>
                   <pattern id="img<%= i + 1 %>" width="33" height="18">
-                    <image xlink:href="" x="0" y="0" width="800" height="500" id="bac-image-<%= i + 1 %>"/>
+                    <image xlink:href="" x="0" y="0" width="800" height="500" id="bac-image-<%= i + 1 %>" class="draggable"/>
                   </pattern>
               <% end %>
             </defs>
@@ -132,41 +132,57 @@
 
     });
 </script>
+
 <!--<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="200" width="200">-->
-  <!--<circle alt="3" class="ui-draggable draggable" y="70" x="70" id="circle5" cx="70" cy="70" r="55" height="" width="" stroke="white" fill="url(#img3)" stroke-width="2"/>-->
+  <!--<defs>-->
+    <!--<pattern height="18" width="33" id="img7">-->
+      <!--<image class="drag" id="bac-image-7" height="500" width="800" y="0" x="0" xlink:href="/system/album_details/photos/000/000/006/original/60693_449683725094305_261359294_n.jpg" transform="rotate(130 50 50) scale(0.4)"/>-->
+    <!--</pattern>-->
+  <!--</defs>-->
+  <!--<circle alt="3" draggable="true" ondragstart="drag(event)" y="70" x="70" id="circle5" cx="70" cy="70" r="55" height="" width="" stroke="white" fill="url(#img7)" stroke-width="2"/>-->
 <!--</svg>-->
-<!--<div id="frame">-->
-  <!--<div id="content"></div>-->
-<!--</div>-->
+
 <script>
     $(function () {
         $(".draggable").draggable();
     });
 
     $(document).ready(function () {
-//        var R = Raphael("content", 500, 500);
-//        var d = R.image("/assets/rails.png", 10, 10, 10)
-//        var c = R.circle(100, 100, 50).attr({
-//            fill: "hsb(.8, 1, 1)",
-//            stroke: "none",
-//            opacity: .5
-//        });
-//        var start = function () {
-                    // storing original coordinates
-//                    this.ox = this.attr("cx");
-//                    this.oy = this.attr("cy");
-//                    this.attr({opacity: 1});
-//                },
-//                move = function (dx, dy) {
-//                    // move will be called with dx and dy
-//                    this.attr({cx: this.ox + dx, cy: this.oy + dy});
-//                },
-//                up = function () {
-//                    // restoring state
-//                    this.attr({opacity: .5});
-//                };
-//        c.drag(move, start, up);
+        $(".draggable").draggable();
+        $('rect')
+                .draggable()
+                .bind('mousedown', function (event, ui) {
+                    // bring target to front
+                    $(event.target.parentElement).append(event.target);
+                })
+                .bind('drag', function (event, ui) {
+                    // update coordinates manually, since top/left style props don't work on SVG
+                    event.target.setAttribute('x', ui.position.left);
+                    event.target.setAttribute('y', ui.position.top);
+                });
+
+//        $('rect')
+//                .draggable()
+//                .bind('mousedown', function (event, ui) {
+//                    // bring target to front
+//                    $(event.target.parentElement).append(event.target);
+//                })
+//                .bind('drag', function (event, ui) {
+//                    // update coordinates manually, since top/left style props don't work on SVG
+//                    event.target.setAttribute("cx", ui.position.left);
+//                    event.target.setAttribute("cy", ui.position.top);
+//
+//                });
+
+//        $('.drag')
+//                .draggable()
+//                .bind('mousedown', function (e, ui) {
+//                    var shape = this.id;
+//                    this.setAttribute("cx", e.pageX);
+//                    this.setAttribute("cy", e.pageY);
+//                });
 
     });
+
 
 </script>
