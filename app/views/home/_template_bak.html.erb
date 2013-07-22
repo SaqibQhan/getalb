@@ -6,7 +6,7 @@
 <%= form_for :album, :url => "albumes/#{album_exist(@album, @album_details) == true ? 'create_album' : 'update_album'}?template_id=#{@template.id}&new_album=#{@album.new_record? ? nil : @album.id}", :html => {:multipart => true} do |f| %>
     <canvas id="canvas" style="display:none;"></canvas>
     <div id="ga-svg-cont" class="ga-svg-cont">
-      <svg xmlns="http://www.w3.org/2000/svg" version="1.1" onclick="open_dialog_svg(this)" style="background: <%= album_exist(@album, @album_details) == false ? "url('#{@svg_background.photo.url}') no-repeat" : '' %>" height="475" width="800" id="templates-container">
+      <svg xmlns="http://www.w3.org/2000/svg" version="1.1" onclick="open_dialog_svg(this)" style="background: <%= album_exist(@album, @album_details) == false ? "url('#{@svg_background.blank? ? nil : @svg_background.photo.url}') no-repeat" : '' %>" height="475" width="800" id="templates-container">
         <% if album_exist(@album, @album_details) %>
             <defs>
               <% @shapes.each_with_index do |s, i| %>
@@ -142,6 +142,15 @@
   <!--<circle alt="3" draggable="true" ondragstart="drag(event)" y="70" x="70" id="circle5" cx="70" cy="70" r="55" height="" width="" stroke="white" fill="url(#img7)" stroke-width="2"/>-->
 <!--</svg>-->
 
+<!--<svg  id="SvgjsSvg1494" xmlns="http://www.w3.org/2000/svg" version="1.1" width="160" height="160" xlink="http://www.w3.org/1999/xlink" style="position:relative;overflow:hidden;left:0px;top:0px;">-->
+  <!--<image class="drag" id="SvgjsImage1496" xlink:href="/assets/rails.png" width="160" height="160" mask="url('#SvgjsMask1498')"/>-->
+  <!--<defs id="SvgjsDefs1495">-->
+    <!--<mask id="SvgjsMask1498">-->
+      <!--<circle style="stoke-width: 2; stroke: black" id="SvgjsEllipse1497" y="170" x="170" id="circle5" cx="70" cy="70" r="70" fill="#ffffff"/>-->
+    <!--</mask>-->
+  <!--</defs>-->
+<!--</svg>-->
+
 <script>
     $(function () {
         $(".draggable").draggable();
@@ -161,7 +170,7 @@
                     event.target.setAttribute('y', ui.position.top);
                 });
 
-//        $('rect')
+//        $('.drag')
 //                .draggable()
 //                .bind('mousedown', function (event, ui) {
 //                    // bring target to front
@@ -171,6 +180,8 @@
 //                    // update coordinates manually, since top/left style props don't work on SVG
 //                    event.target.setAttribute("cx", ui.position.left);
 //                    event.target.setAttribute("cy", ui.position.top);
+//                    event.target.setAttribute("x", ui.position.left);
+//                    event.target.setAttribute("y", ui.position.top);
 //
 //                });
 
