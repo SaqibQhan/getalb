@@ -3,46 +3,138 @@
 <%= hidden_field_tag "selected", "" %>
 <span class="badge badge-success"> Page <%= params[:page].blank? ? 1 : params[:page] %> </span>
 <%= link_to "Back", "/index?id=#{params[:id]}&page=#{params[:page].to_i - 1}", :class => "btn btn-success" if !params[:id].blank? and params[:page].to_i > 1 %>
+<!-- Modal -->
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none">
+  <%= render "shared/images_select" %>
+</div>
+<!-- Modal end -->
+<%= link_to "Download", "javascript:", :onclick => "download_svg()" %>
+<%= render "home/template_js" %>
+<div id="slider-container" style="display: none">
+  <label> Rotate </label>
+
+  <div id="slider_rotate" class="ga-slider"></div>
+  <label> Scale </label>
+
+  <div id="slider_scale" class="ga-slider"></div>
+</div>
+
+<!--<svg xmlns="http://www.w3.org/2000/svg" id="SvgjsSvg1000" version="1.1" width="100%" height="100%" xlink="http://www.w3.org/1999/xlink" style="position:relative;overflow:hidden;left:0px;top:0px;">-->
+<!--<defs>-->
+<!--<mask id="mask" maskUnits="userSpaceOnUse">-->
+<!--<rect id="SvgjsRect1003" width="50%" height="20%" y="75" x="125" fill="white"/>-->
+<!--</mask>-->
+<!--</defs>-->
+<!--<g mask="url(#mask)">-->
+<!--<image id="SvgjsImage1004" xlink:href="http://t1.gstatic.com/images?q=tbn:ANd9GcQo_CFlPKdX-_-EEs34S-Y8T9l2kVNY59fwfhCKHBK90XSwS21grA" width="400" height="250" transform="rotate(75 200 125)" />-->
+<!--</g>-->
+<!--</svg>-->
+<script type="text/javascript">
+    function download_svg() {
+        svg = $('#ga-svg-cont').html();
+//       WORKING svg = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1"  height="475" width="800"><circle stroke-width="2" fill="url(#img1)" stroke="black" width="" height="" r="55" cy="70" cx="730" id="circle1" x="730" y="70" class="ga-svg droppable" alt="1"></circle></svg>'
+        canvg('canvas', svg);
+        canvas = document.getElementById("canvas");
+        img_PNG = Canvas2Image.saveAsPNG(canvas);
+
+    }
+
+    $(function () {
+        $("#slider_rotate").slider({
+            value: 0,
+            min: 0,
+            max: 720,
+            step: 5,
+            slide: function (event, ui) {
+                rotate_pos = $("#slider_rotate").slider("value");
+                scale_pos = $("#slider_scale").slider("value");
+                index = $('#selected').val();
+                $('#image' + index).val(rotate_pos);
+//                $('#Svg_circle1').attr('transform', "rotate(" + rotate_pos + " 50 50) scale(" + scale_pos + ")");
+//                $('#img_1').attr('transform', "rotate(75 200 125)");
+
+            }
+        });
+        $("#slider_scale").slider({
+            value: .9,
+            min: .1,
+            max: .9,
+            step: .1,
+            slide: function (event, ui) {
+                rotate_pos = $("#slider_rotate").slider("value");
+                scale_pos = $("#slider_scale").slider("value");
+                index = $('#selected').val();
+                $('#scale' + index).val(scale_pos);
+                $('#bac-image-' + index).attr('transform', "rotate(" + rotate_pos + " 50 50) scale(" + scale_pos + ")");
+            }
+        });
+
+    });
+</script>
+
+<!--<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="200" width="200">-->
+<!--<defs>-->
+<!--<pattern height="18" width="33" id="img7">-->
+<!--<image class="drag" id="bac-image-7" height="500" width="800" y="0" x="0" xlink:href="" transform="rotate(130 50 50) scale(0.4)"/>-->
+<!--</pattern>-->
+<!--</defs>-->
+<!--<circle style="stroke: 2; stroke-width: #000000" alt="3" stroke="2" stroke-width="#000000" draggable="true" ondragstart="drag(event)" y="70" x="70" id="circle5" cx="70" cy="70" r="55" height="" width="" stroke="white" fill="url(#img7)" stroke-width="2"/>-->
+<!--</svg>-->
+
 <%= form_for :album, :url => "albumes/#{album_exist(@album, @album_details) == true ? 'create_album' : 'update_album'}?template_id=#{@template.id}&new_album=#{@album.new_record? ? nil : @album.id}", :html => {:multipart => true} do |f| %>
     <canvas id="canvas" style="display:none;"></canvas>
     <div id="ga-svg-cont" class="ga-svg-cont">
       <svg xmlns="http://www.w3.org/2000/svg" version="1.1" onclick="open_dialog_svg(this)" style="background: <%= album_exist(@album, @album_details) == false ? "url('#{@svg_background.blank? ? nil : @svg_background.photo.url}') no-repeat" : '' %>" height="475" width="800" id="templates-container">
         <% if album_exist(@album, @album_details) %>
-            <defs>
-              <% @shapes.each_with_index do |s, i| %>
-                  <pattern id="img<%= i + 1 %>" width="33" height="18">
-                    <image xlink:href="" x="0" y="0" width="800" height="500" id="bac-image-<%= i + 1 %>" class="draggable"/>
-                  </pattern>
-              <% end %>
-            </defs>
+            <% @shapes.each_with_index do |s, i| %>
+                <g mask="url('#SvgMask_<%= i + 1 %>')">
+                  <image style="left: <%= s.x %>px; ;position: relative; top: <%= s.y %>px" y="<%= s.y %>" x="<%= s.x %>" cy="<%= s.y %>" cx="<%= s.x %>" class="drag" id="SvgImage_<%= i + 1 %>" xlink:href="" width="<%= (i == 0 or i == 2) ? 160 : 300 %>" height="<%= (i == 0 or i == 2) ? 160 : 300 %>"/>
+                </g>
+            <% end %>
         <% else %>
-            <defs>
-              <% @album_details.each_with_index do |s, i| %>
-                  <pattern id="img<%= i + 1 %>" width="33" height="18">
-                    <image transform="rotate(<%= s.rotate %> 50 50) scale(<%= s.scale %>)" xlink:href="<%= s.photo.url %>" x="0" y="0" width="800" height="500" id="bac-image-<%= i + 1 %>"/>
-                  </pattern>
-              <% end %>
-            </defs>
+            <% @album_details.each_with_index do |s, i| %>
+                <image style="left: <%= s.left %>px; ;position: relative; top: <%= s.top %>px" y="<%= s.shape.y %>" x="<%= s.shape.x %>" cy="<%= s.shape.y %>" cx="<%= s.shape.x %>" class="drag" id="SvgImage_<%= i + 1 %>" xlink:href="<%= s.photo.url %>" width="<%= (i == 0 or i == 2) ? 160 : 300 %>" height="<%= (i == 0 or i == 2) ? 160 : 300 %>" mask="url('#SvgMask_<%= i + 1 %>')"/>
+            <% end %>
         <% end %>
         <% if album_exist(@album, @album_details) %>
             <% @shapes.each_with_index do |s, c| %>
+                <defs id="SvgDefs_<%= c + 1 %>">
+                  <mask id="SvgMask_<%= c + 1 %>">
+                    <<%= s.type %> stroke-width="2" fill="#ffffff" stroke="white"
+                    width="<%= s.width %>"
+                    height="<%= s.height %>"
+                    r="<%= s.r %>" id="Svg_<%= s.type %><%= c + 1 %>"
+                    cy="<%= s.y %>" cx="<%= s.x %>"
+                    x="<%= s.x %>"
+                    y="<%= s.y %>"
+                    class="ga-svg ga-svg-<%= c + 1 %>" alt="<%= c + 1 %>"
+                    onclick="<%= user_signed_in? ? 'open_dialog(this)' : 'open_file(this)' %>"/>
+                  </mask>
+                </defs>
+
                 <<%= s.type %> stroke-width="2" fill="white" stroke="white" width="<%= s.width %>"
                 height="<%= s.height %>"
                 r="<%= s.r %>"
                 cy="<%= s.y %>" cx="<%= s.x %>" id="<%= s.type %><%= c + 1 %>" x="<%= s.x %>" y="<%= s.y %>"
                 class="ga-svg ga-svg-<%= c + 1 %>" alt="<%= c + 1 %>"
                 onclick="<%= user_signed_in? ? 'open_dialog(this)' : 'open_file(this)' %>"/>
+
             <% end %>
         <% else %>
             <% @album_details.each_with_index do |s, c| %>
-                <<%= s.shape.type %> stroke-width="2" fill="url(#img<%= c + 1 %>)" stroke="white"
-                width="<%= s.shape.width %>"
-                height="<%= s.shape.height %>"
-                r="<%= s.shape.r %>"
-                cy="<%= s.shape.y %>" cx="<%= s.shape.x %>" id="<%= s.shape.type %><%= c + 1 %>" x="<%= s.shape.x %>"
-                y="<%= s.shape.y %>"
-                class="ga-svg ga-svg-<%= c + 1 %>" alt="<%= c + 1 %>"
-                onclick="<%= user_signed_in? ? 'open_dialog(this)' : 'open_file(this)' %>"/>
+                <defs id="SvgDefs_<%= c + 1 %>">
+                  <mask id="SvgMask_<%= c + 1 %>">
+                    <<%= s.shape.type %> stroke-width="2" fill="#ffffff" stroke="white"
+                    width="<%= s.shape.width %>"
+                    height="<%= s.shape.height %>"
+                    r="<%= s.shape.r %>" id="<%= s.shape.type %><%= c + 1 %>"
+                    cy="<%= s.shape.y %>" cx="<%= s.shape.x %>"
+                    x="<%= s.shape.x %>"
+                    y="<%= s.shape.y %>"
+                    class="ga-svg ga-svg-<%= c + 1 %>" alt="<%= c + 1 %>"
+                    onclick="<%= user_signed_in? ? 'open_dialog(this)' : 'open_file(this)' %>"/>
+                  </mask>
+                </defs>
             <% end %>
         <% end %>
       </svg>
@@ -76,143 +168,22 @@
 
     <%= f.submit "#{album_exist(@album, @album_details) == true ? 'Save & Next' : 'Update & Next' }", :class => "btn btn-primary" %>
 <% end %>
-<!-- Modal -->
-<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none">
-  <%= render "shared/images_select" %>
-</div>
-<!-- Modal end -->
-<%= link_to "Download", "javascript:", :onclick => "download_svg()" %>
-<%= render "home/template_js" %>
-<div id="slider-container" style="display: none">
-  <label> Rotate </label>
-
-  <div id="slider_rotate" class="ga-slider"></div>
-  <label> Scale </label>
-
-  <div id="slider_scale" class="ga-slider"></div>
-</div>
-
-<script type="text/javascript">
-    function download_svg() {
-        svg = $('#ga-svg-cont').html();
-//       WORKING svg = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1"  height="475" width="800"><circle stroke-width="2" fill="url(#img1)" stroke="black" width="" height="" r="55" cy="70" cx="730" id="circle1" x="730" y="70" class="ga-svg droppable" alt="1"></circle></svg>'
-        canvg('canvas', svg);
-        canvas = document.getElementById("canvas");
-        img_PNG = Canvas2Image.saveAsPNG(canvas);
-
-    }
-
-    $(function () {
-        $("#slider_rotate").slider({
-            value: 0,
-            min: 0,
-            max: 720,
-            step: 5,
-            slide: function (event, ui) {
-                rotate_pos = $("#slider_rotate").slider("value");
-                scale_pos = $("#slider_scale").slider("value");
-                index = $('#selected').val();
-                $('#image' + index).val(rotate_pos);
-                $('#bac-image-' + index).attr('transform', "rotate(" + rotate_pos + " 50 50) scale(" + scale_pos + ")");
-            }
-        });
-        $("#slider_scale").slider({
-            value: .9,
-            min: .1,
-            max: .9,
-            step: .1,
-            slide: function (event, ui) {
-                rotate_pos = $("#slider_rotate").slider("value");
-                scale_pos = $("#slider_scale").slider("value");
-                index = $('#selected').val();
-                $('#scale' + index).val(scale_pos);
-                $('#bac-image-' + index).attr('transform', "rotate(" + rotate_pos + " 50 50) scale(" + scale_pos + ")");
-            }
-        });
-
-    });
-</script>
-
-<!--<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="200" width="200">-->
-  <!--<defs>-->
-    <!--<pattern height="18" width="33" id="img7">-->
-      <!--<image class="drag" id="bac-image-7" height="500" width="800" y="0" x="0" xlink:href="" transform="rotate(130 50 50) scale(0.4)"/>-->
-    <!--</pattern>-->
-  <!--</defs>-->
-  <!--<circle style="stroke: 2; stroke-width: #000000" alt="3" stroke="2" stroke-width="#000000" draggable="true" ondragstart="drag(event)" y="70" x="70" id="circle5" cx="70" cy="70" r="55" height="" width="" stroke="white" fill="url(#img7)" stroke-width="2"/>-->
-<!--</svg>-->
-
-<%= form_for :album, :url => "albumes/#{album_exist(@album, @album_details) == true ? 'create_album' : 'update_album'}?template_id=#{@template.id}&new_album=#{@album.new_record? ? nil : @album.id}", :html => {:multipart => true} do |f| %>
-    <canvas id="canvas" style="display:none;"></canvas>
-    <div id="ga-svg-cont" class="ga-svg-cont">
-      <svg xmlns="http://www.w3.org/2000/svg" version="1.1" onclick="open_dialog_svg(this)" style="background: <%= album_exist(@album, @album_details) == false ? "url('#{@svg_background.blank? ? nil : @svg_background.photo.url}') no-repeat" : '' %>" height="475" width="800" id="templates-container">
-        <% if album_exist(@album, @album_details) %>
-            <defs>
-              <% @shapes.each_with_index do |s, i| %>
-                  <pattern id="img<%= i + 1 %>" width="33" height="18">
-                    <image xlink:href="" x="0" y="0" width="800" height="500" id="bac-image-<%= i + 1 %>" class="draggable"/>
-                  </pattern>
-              <% end %>
-            </defs>
-        <% else %>
-            <% @album_details.each_with_index do |s, i| %>
-                <image class="drag" id="SvgImage_<%= i + 1 %>" xlink:href="<%= s.photo.url %>" width="100%" height="100%" mask="url('#SvgMask_<%= i + 1 %>')"/>
-            <% end %>
-        <% end %>
-        <% if album_exist(@album, @album_details) %>
-            <% @shapes.each_with_index do |s, c| %>
-                <<%= s.type %> stroke-width="2" fill="white" stroke="white" width="<%= s.width %>"
-                height="<%= s.height %>"
-                r="<%= s.r %>"
-                cy="<%= s.y %>" cx="<%= s.x %>" id="<%= s.type %><%= c + 1 %>" x="<%= s.x %>" y="<%= s.y %>"
-                class="ga-svg ga-svg-<%= c + 1 %>" alt="<%= c + 1 %>"
-                onclick="<%= user_signed_in? ? 'open_dialog(this)' : 'open_file(this)' %>"/>
-            <% end %>
-        <% else %>
-            <% @album_details.each_with_index do |s, c| %>
-                <defs id="SvgDefs_<%= c + 1 %>">
-                  <mask id="SvgMask_<%= c + 1 %>">
-                    <<%= s.shape.type %> stroke-width="2" fill="#ffffff" stroke="white"
-                    width="<%= s.shape.width %>"
-                    height="<%= s.shape.height %>"
-                    r="<%= s.shape.r %>" id="<%= s.shape.type %><%= c + 1 %>"
-                    cy="<%= s.shape.y %>" cx="<%= s.shape.x %>"
-                    x="<%= s.shape.x %>"
-                    y="<%= s.shape.y %>"
-                    class="ga-svg ga-svg-<%= c + 1 %>" alt="<%= c + 1 %>"
-                    onclick="<%= user_signed_in? ? 'open_dialog(this)' : 'open_file(this)' %>"/>
-                  </mask>
-                </defs>
-            <% end %>
-        <% end %>
-        <!--<image class="drag" id="SvgjsImage1496" xlink:href="/assets/rails.png" width="160" height="160" mask="url('#SvgjsMask1498')"/>-->
-        <!--<defs id="SvgjsDefs1495">-->
-        <!--<mask id="SvgjsMask1498">-->
-        <!--<circle style="stoke-width: 2; stroke: black" id="SvgjsEllipse1497" y="170" x="170" id="circle5" cx="70" cy="70" r="70" fill="#ffffff"/>-->
-        <!--</mask>-->
-        <!--</defs>-->
-      </svg>
-    </div>
-<% end %>
 <script>
-    $(function () {
-        $(".draggable").draggable();
-    });
-
     $(document).ready(function () {
         $('.drag')
                 .draggable()
                 .bind('mousedown', function (event, ui) {
                     // bring target to front
                     $(event.target.parentElement).append(event.target);
+
                 })
                 .bind('drag', function (event, ui) {
                     // update coordinates manually, since top/left style props don't work on SVG
-                    event.target.setAttribute("cx", ui.position.left);
-                    event.target.setAttribute("cy", ui.position.top);
+//                    event.target.setAttribute("cx", ui.position.left);
+//                    event.target.setAttribute("cy", ui.position.top);
                     event.target.setAttribute("x", ui.position.left);
                     event.target.setAttribute("y", ui.position.top);
-
+//
                 });
 
 //        $('.drag')

@@ -10,10 +10,11 @@
             reader.onload = function (e) {
                 var index = $('#index').val();
                 if (index != 'svg-index') {
-                    $('#bac-image-' + index).attr('xlink:href', e.target.result);
+                    $('#SvgImage_' + index).attr('xlink:href', e.target.result)
                     var clicked = $('#clicked').val();
-//                    $('#' + clicked).attr('fill', 'url(#img' + index + ')').attr('onclick', "rotate(" + index + ")").attr('id', 'img');
-                    $('#' + clicked).attr('fill', 'url(#img' + index + ')').attr('onclick', "sliders(" + index + ")").attr('id', 'img_' + index);
+                    $('#' + clicked).hide();
+                    $('#SvgImage_' + index).attr('onclick', "sliders(" + index + ")").attr('id',
+                            'img_' + index)
                     $('#clicked').val('');
                     $('#image_type' + index).val('upload');
                 }
@@ -37,8 +38,9 @@
     function sliders(index) {
         $('#slider-container').show();
         $('#selected').val(index);
-        $('.ga-svg').attr('class', 'ga-shadow');
-        $('#img_' + index).attr('class', 'ga-svg');
+        $('.ga-svg').addClass('ga-shadow');
+        $('.drag').attr('class', 'drag ga-shadow');
+        $('#img_' + index).attr('class', 'drag');
 
     }
 

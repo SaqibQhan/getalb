@@ -75,13 +75,32 @@ window.open_uploader = (f) ->
   index = $('#index').val()
   $('#file_opener' + index).click()
 
-window.choose_fb_image = (photo) ->
+window.choose_fb_image_bak = (photo) ->
   index = $('#index').val()
   if index != 'svg-index'
     $('#bac-image-' + index).attr('xlink:href', photo)
     clicked = $('#clicked').val()
     #    $('#' + clicked).attr('fill', 'url(#img' + index + ')').attr('onclick', "rotate(" + index + ")").attr('id', 'img')
     $('#' + clicked).attr('fill', 'url(#img' + index + ')').attr('onclick', "sliders(" + index + ")").attr('id',
+      'img_' + index)
+    $('#clicked').val('')
+    $('#image_type' + index).val('fb')
+    $('#fb_url' + index).val(photo)
+  else
+    $('#templates-container').css('background', "url('" + photo + "') no-repeat");
+    $('#templates-container').attr('onclick', '');
+    $('#clicked').val('');
+    $('#svg_image_type').val('fb')
+    $('#svg_fb_url').val(photo)
+
+
+window.choose_fb_image = (photo) ->
+  index = $('#index').val()
+  if index != 'svg-index'
+    $('#SvgImage_' + index).attr('xlink:href', photo)
+    clicked = $('#clicked').val()
+    $('#' + clicked).hide();
+    $('#SvgImage_' + index).attr('onclick', "sliders(" + index + ")").attr('id',
       'img_' + index)
     $('#clicked').val('')
     $('#image_type' + index).val('fb')
