@@ -41,11 +41,20 @@
         $('.ga-svg').addClass('ga-shadow');
         $('.drag').attr('class', 'drag ga-shadow');
         $('#img_' + index).attr('class', 'drag');
-
+        resetSlider();
     }
-
+    function resetSlider() {
+        $("#slider_rotate").slider("value", $("#slider_rotate").slider("option", "min"));
+        $("#slider_scale").slider("value", $("#slider_scale").slider("option", "max"));
+    }
     $(document).ready(function () {
+        $(".ga-shadow").click(function (event) {
+            event.stopPropagation();
+        })
         $(".ga-svg").click(function (event) {
+            event.stopPropagation();
+        })
+        $(".drag").click(function (event) {
             event.stopPropagation();
         })
 

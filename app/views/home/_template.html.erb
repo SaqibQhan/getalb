@@ -19,16 +19,6 @@
   <div id="slider_scale" class="ga-slider"></div>
 </div>
 
-<!--<svg xmlns="http://www.w3.org/2000/svg" id="SvgjsSvg1000" version="1.1" width="100%" height="100%" xlink="http://www.w3.org/1999/xlink" style="position:relative;overflow:hidden;left:0px;top:0px;">-->
-<!--<defs>-->
-<!--<mask id="mask" maskUnits="userSpaceOnUse">-->
-<!--<rect id="SvgjsRect1003" width="50%" height="20%" y="75" x="125" fill="white"/>-->
-<!--</mask>-->
-<!--</defs>-->
-<!--<g mask="url(#mask)">-->
-<!--<image id="SvgjsImage1004" xlink:href="http://t1.gstatic.com/images?q=tbn:ANd9GcQo_CFlPKdX-_-EEs34S-Y8T9l2kVNY59fwfhCKHBK90XSwS21grA" width="400" height="250" transform="rotate(75 200 125)" />-->
-<!--</g>-->
-<!--</svg>-->
 <script type="text/javascript">
     function download_svg() {
         svg = $('#ga-svg-cont').html();
@@ -51,35 +41,58 @@
                 index = $('#selected').val();
                 $('#image' + index).val(rotate_pos);
 //                $('#Svg_circle1').attr('transform', "rotate(" + rotate_pos + " 50 50) scale(" + scale_pos + ")");
-//                $('#img_1').attr('transform', "rotate(75 200 125)");
-
+                if (index == 1) {
+                    $('#img_' + index).attr('transform', "rotate(" + rotate_pos + " 732 85) scale(" + scale_pos + ")");
+                }
+                else if (index == 2) {
+                    $('#img_' + index).attr('transform', "rotate(" + rotate_pos + " 400 200) scale(" + scale_pos + ")");
+                }
+                else if (index == 3) {
+                    $('#img_' + index).attr('transform', "rotate(" + rotate_pos + " 60 100) scale(" + scale_pos + ")");
+                }
+            },
+            stop: function (event, ui) {
+                rotate_slide();
             }
         });
+
+        function rotate_slide() {
+            index = $('#selected').val();
+            transform = $('#img_' + index).attr('transform');
+            scale = transform.split('scale(')[1].replace(')', '');
+            rotate = transform.split(' ')[0].replace('rotate', '').replace('(', '').replace(')', '').split(' ')[0];
+            $('#image' + index).val(rotate);
+            $('#scale' + index).val(scale);
+        }
+
         $("#slider_scale").slider({
             value: .9,
             min: .1,
             max: .9,
-            step: .1,
+            step: .01,
             slide: function (event, ui) {
                 rotate_pos = $("#slider_rotate").slider("value");
                 scale_pos = $("#slider_scale").slider("value");
                 index = $('#selected').val();
                 $('#scale' + index).val(scale_pos);
-                $('#bac-image-' + index).attr('transform', "rotate(" + rotate_pos + " 50 50) scale(" + scale_pos + ")");
+                if (index == 1) {
+                    $('#img_' + index).attr('transform', "rotate(" + rotate_pos + " 732 85) scale(" + scale_pos + ")");
+                }
+                else if (index == 2) {
+                    $('#img_' + index).attr('transform', "rotate(" + rotate_pos + " 400 200) scale(" + scale_pos + ")");
+                }
+                else if (index == 3) {
+                    $('#img_' + index).attr('transform', "rotate(" + rotate_pos + " 60 100) scale(" + scale_pos + ")");
+                }
+            },
+            stop: function (event, ui) {
+                rotate_slide();
             }
         });
 
     });
 </script>
 
-<!--<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="200" width="200">-->
-<!--<defs>-->
-<!--<pattern height="18" width="33" id="img7">-->
-<!--<image class="drag" id="bac-image-7" height="500" width="800" y="0" x="0" xlink:href="" transform="rotate(130 50 50) scale(0.4)"/>-->
-<!--</pattern>-->
-<!--</defs>-->
-<!--<circle style="stroke: 2; stroke-width: #000000" alt="3" stroke="2" stroke-width="#000000" draggable="true" ondragstart="drag(event)" y="70" x="70" id="circle5" cx="70" cy="70" r="55" height="" width="" stroke="white" fill="url(#img7)" stroke-width="2"/>-->
-<!--</svg>-->
 
 <%= form_for :album, :url => "albumes/#{album_exist(@album, @album_details) == true ? 'create_album' : 'update_album'}?template_id=#{@template.id}&new_album=#{@album.new_record? ? nil : @album.id}", :html => {:multipart => true} do |f| %>
     <canvas id="canvas" style="display:none;"></canvas>
@@ -88,12 +101,12 @@
         <% if album_exist(@album, @album_details) %>
             <% @shapes.each_with_index do |s, i| %>
                 <g mask="url('#SvgMask_<%= i + 1 %>')">
-                  <image style="left: <%= s.x %>px; ;position: relative; top: <%= s.y %>px" y="<%= s.y %>" x="<%= s.x %>" cy="<%= s.y %>" cx="<%= s.x %>" class="drag" id="SvgImage_<%= i + 1 %>" xlink:href="" width="<%= (i == 0 or i == 2) ? 160 : 300 %>" height="<%= (i == 0 or i == 2) ? 160 : 300 %>"/>
+                  <image transform="<%= i == 0 ? 'rotate(1 732 85)' : i== 1 ? 'rotate(1 400 200)' : 'rotate(1 60 100)' %> " style="left: <%= s.x %>px; ;position: relative; top: <%= s.y %>px" y="<%= s.y %>" x="<%= s.x %>" cy="<%= s.y %>" cx="<%= s.x %>" class="drag" id="SvgImage_<%= i + 1 %>" xlink:href="" width="<%= s.type == 'circle' ? 160 : 300 %>" height="<%= s.type == 'circle' ? 160 : 300 %>"/>
                 </g>
             <% end %>
         <% else %>
             <% @album_details.each_with_index do |s, i| %>
-                <image style="left: <%= s.left %>px; ;position: relative; top: <%= s.top %>px" y="<%= s.shape.y %>" x="<%= s.shape.x %>" cy="<%= s.shape.y %>" cx="<%= s.shape.x %>" class="drag" id="SvgImage_<%= i + 1 %>" xlink:href="<%= s.photo.url %>" width="<%= (i == 0 or i == 2) ? 160 : 300 %>" height="<%= (i == 0 or i == 2) ? 160 : 300 %>" mask="url('#SvgMask_<%= i + 1 %>')"/>
+                <image transform='scale(<%= s.scale == 0.9 ? nil : s.scale %>) <%= i == 0 ? "rotate(#{s.rotate} 732 85)" : i== 1 ? "rotate(#{s.rotate} 400 200)" : "rotate(#{s.rotate} 60 100)" %>' style="left: <%= s.left %>px; ;position: relative; top: <%= s.top %>px" y="<%= s.top %>" x="<%= s.left %>" cy="<%= s.shape.y %>" cx="<%= s.shape.x %>" class="drag" id="SvgImage_<%= i + 1 %>" xlink:href="<%= s.photo.url %>" width="<%= s.shape.type == 'circle' ? 160 : 300 %>" height="<%= s.shape.type == 'circle' ? 160 : 300 %>" mask="url('#SvgMask_<%= i + 1 %>')" alt='<%= i %><%= s.id %>'/>
             <% end %>
         <% end %>
         <% if album_exist(@album, @album_details) %>
@@ -147,6 +160,8 @@
             <%= hidden_field_tag "image_type#{ c + 1}" "" %>
             <%= hidden_field_tag "shape_id#{ c + 1}", s.id %>
             <%= hidden_field_tag "fb_url#{ c + 1}", "" %>
+            <%= hidden_field_tag "left#{ c + 1}", s.x %>
+            <%= hidden_field_tag "top#{ c + 1}", s.y %>
         <% end %>
         <%= hidden_field_tag "shapes_count", @shapes.count %>
 
@@ -158,6 +173,8 @@
             <%= hidden_field_tag "image_type#{ c + 1}", s.image_type %>
             <%= hidden_field_tag "shape_id#{ c + 1}", s.shape_id %>
             <%= hidden_field_tag "fb_url#{ c + 1}", "" %>
+            <%= hidden_field_tag "left#{ c + 1}", s.left %>
+            <%= hidden_field_tag "top#{ c + 1}", s.top %>
         <% end %>
         <%= hidden_field_tag "shapes_count", @album_details.count %>
     <% end %>
@@ -171,7 +188,14 @@
 <script>
     $(document).ready(function () {
         $('.drag')
-                .draggable()
+                .draggable({stop: function (evt, ui) {
+                    obj_e = $(this).attr('id');
+                    index = obj_e.split('_')[1];
+                    left_e = $(this).css('left').replace('px', '');
+                    top_e = $(this).css('top').replace('px', '');
+                    $('#left' + index).val(left_e);
+                    $('#top' + index).val(top_e);
+                }})
                 .bind('mousedown', function (event, ui) {
                     // bring target to front
                     $(event.target.parentElement).append(event.target);
