@@ -97,16 +97,19 @@
 <%= form_for :album, :url => "albumes/#{album_exist(@album, @album_details) == true ? 'create_album' : 'update_album'}?template_id=#{@template.id}&new_album=#{@album.new_record? ? nil : @album.id}", :html => {:multipart => true} do |f| %>
     <canvas id="canvas" style="display:none;"></canvas>
     <div id="ga-svg-cont" class="ga-svg-cont">
-      <svg xmlns="http://www.w3.org/2000/svg" version="1.1" onclick="open_dialog_svg(this)" style="background: <%= album_exist(@album, @album_details) == false ? "url('#{@svg_background.blank? ? nil : @svg_background.photo.url}') no-repeat" : '' %>" height="475" width="800" id="templates-container">
+      <svg xmlns="http://www.w3.org/2000/svg" version="1.1" onclick="open_dialog_svg(this)" style=";background: <%= album_exist(@album, @album_details) == false ? "url('#{@svg_background.blank? ? nil : @svg_background.photo.url}') no-repeat" : '' %>; background-size: 900px" height="475" width="800" id="templates-container">
+        <text x="180" y="68" font-family="Verdana" font-size="55" fill="blue" class="drag">
+            Hello, out there
+          </text>
         <% if album_exist(@album, @album_details) %>
             <% @shapes.each_with_index do |s, i| %>
                 <g mask="url('#SvgMask_<%= i + 1 %>')">
-                  <image transform="<%= i == 0 ? 'rotate(1 732 85)' : i== 1 ? 'rotate(1 400 200)' : 'rotate(1 60 100)' %> " style="left: <%= s.x %>px; ;position: relative; top: <%= s.y %>px" y="<%= s.y %>" x="<%= s.x %>" cy="<%= s.y %>" cx="<%= s.x %>" class="drag" id="SvgImage_<%= i + 1 %>" xlink:href="" width="<%= s.type == 'circle' ? 160 : 300 %>" height="<%= s.type == 'circle' ? 160 : 300 %>"/>
+                  <image transform="<%= i == 0 ? 'rotate(0 732 85)' : i== 1 ? 'rotate(0 400 200)' : 'rotate(0 60 100)' %> " style="left: <%= s.image_x %>px; ;position: relative; top: <%= s.image_y %>px" y="<%= s.image_y %>" x="<%= s.image_x %>" cy="<%= s.image_y %>" cx="<%= s.image_x %>" class="drag" id="SvgImage_<%= i + 1 %>" xlink:href="" width="<%= s.image_width %>" height="<%= s.image_height %>"/>
                 </g>
             <% end %>
         <% else %>
             <% @album_details.each_with_index do |s, i| %>
-                <image transform='scale(<%= s.scale == 0.9 ? nil : s.scale %>) <%= i == 0 ? "rotate(#{s.rotate} 732 85)" : i== 1 ? "rotate(#{s.rotate} 400 200)" : "rotate(#{s.rotate} 60 100)" %>' style="left: <%= s.left %>px; ;position: relative; top: <%= s.top %>px" y="<%= s.top %>" x="<%= s.left %>" cy="<%= s.shape.y %>" cx="<%= s.shape.x %>" class="drag" id="SvgImage_<%= i + 1 %>" xlink:href="<%= s.photo.url %>" width="<%= s.shape.type == 'circle' ? 160 : 300 %>" height="<%= s.shape.type == 'circle' ? 160 : 300 %>" mask="url('#SvgMask_<%= i + 1 %>')" alt='<%= i %><%= s.id %>'/>
+                <image transform='<%= i == 0 ? "rotate(#{s.rotate} 732 85)" : i== 1 ? "rotate(#{s.rotate} 400 200)" : "rotate(#{s.rotate} 60 100)" %> scale(<%= s.scale %>)' style="left: <%= s.left %>px; ;position: relative; top: <%= s.top %>px" y="<%= s.top %>" x="<%= s.left %>" class="drag" id="SvgImage_<%= i + 1 %>" xlink:href="<%= s.photo.url %>" width="<%= s.shape.image_width %>" height="<%= s.shape.image_height %>" mask="url('#SvgMask_<%= i + 1 %>')"/>
             <% end %>
         <% end %>
         <% if album_exist(@album, @album_details) %>
@@ -155,13 +158,13 @@
     <% if album_exist(@album, @album_details) %>
         <% @shapes.each_with_index do |s, c| %>
             <%= hidden_field_tag "image#{ c + 1}", 0 %>
-            <%= hidden_field_tag "scale#{ c + 1}", 0.9 %>
+            <%= hidden_field_tag "scale#{ c + 1}", 1 %>
             <%= file_field_tag "file_opener#{ c + 1}", :class => "file_opener", :style => "display: none" %>
             <%= hidden_field_tag "image_type#{ c + 1}" "" %>
             <%= hidden_field_tag "shape_id#{ c + 1}", s.id %>
             <%= hidden_field_tag "fb_url#{ c + 1}", "" %>
-            <%= hidden_field_tag "left#{ c + 1}", s.x %>
-            <%= hidden_field_tag "top#{ c + 1}", s.y %>
+            <%= hidden_field_tag "left#{ c + 1}", s.image_x %>
+            <%= hidden_field_tag "top#{ c + 1}", s.image_y %>
         <% end %>
         <%= hidden_field_tag "shapes_count", @shapes.count %>
 
@@ -220,5 +223,14 @@
 
     });
 
+    $(document).mouseup(function (e) {
+        var container = $("#ga-svg-cont");
 
+        if (!container.is(e.target) // if the target of the click isn't the container...
+                && container.has(e.target).length === 0) // ... nor a descendant of the container
+        {
+            $('#ga-svg-cont').find('.ga-shadow').attr('class', 'drag ga-svg');
+            $('#slider-container').hide();
+        }
+    });
 </script>

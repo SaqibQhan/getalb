@@ -19,7 +19,7 @@
                     $('#image_type' + index).val('upload');
                 }
                 else {
-                    $('#templates-container').css('background', "url('" + e.target.result + "')");
+                    $('#templates-container').css('background', "url('" + e.target.result + "')").css('background-size', '900px');
                     $('#templates-container').attr('onclick', '');
                     $('#clicked').val('');
                     $('#svg_image_type').val('upload');
