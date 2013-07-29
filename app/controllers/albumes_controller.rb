@@ -38,6 +38,8 @@ class AlbumesController < ApplicationController
     album_page_photo = album_page.update_attributes(:photo => params["file_openersvg-index"]) if params[:svg_image_type] == "upload" and !params["file_openersvg-index"].blank?
     album_page_photo = AlbumDetail.new.photo_from_url(params["svg_fb_url"], album_page) if params[:svg_image_type] == "fb" and !params["svg_fb_url"].blank?
     album_pages = album_page.update_attributes(:image_type => params[:svg_image_type]) if !params["svg_fb_url"].blank? or !params["file_openersvg-index"].blank?
+    svg_text = SvgText.new(:text => params[:text], :page => params[:page], :album_id => album.id)
+    svg_text.save
 
     redirect_to "/index?id=#{album.id}&page=#{ params[:page].to_i + 1}"
   end
@@ -59,6 +61,8 @@ class AlbumesController < ApplicationController
     album_page_photo = album_detail.update_attributes(:photo => params["file_openersvg-index"]) if params[:svg_image_type] == "upload" and !params["file_openersvg-index"].blank?
     album_page_photo = AlbumDetail.new.photo_from_url(params["svg_fb_url"], album_detail) if params[:svg_image_type] == "fb" and !params["svg_fb_url"].blank?
     album_pages = album_detail.update_attributes(:image_type => params[:svg_image_type]) if !params["svg_fb_url"].blank? or !params["file_openersvg-index"].blank?
+    svg_text = SvgText.find_by_album_id_and_page(album.id, params[:page])
+    svg_text.update_attributes(:text => params[:text])
 
     redirect_to "/index?id=#{album.id}&page=#{ params[:page].to_i + 1}"
   end

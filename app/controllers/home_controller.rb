@@ -11,6 +11,7 @@ class HomeController < ApplicationController
     @template = @album_details.first if !params[:id].blank? and !@album_details.blank?
     @shapes = Shape.where('template_id = ? and title != ? ', @template.template_id, 'svg') if !params[:id].blank? and !@template.blank?
     @svg_background = AlbumDetail.find_by_album_id_and_page_and_shape_id(@album.id, params[:page], Shape.find_by_type('svg').id) if !params[:id].blank? and !@album_details.blank?
+    @svg_text = SvgText.find_by_album_id_and_page(@album.id, params[:page]) if !params[:id].blank? and !@album_details.blank?
 
     $photos = []
     unless current_user.blank?

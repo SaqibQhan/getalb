@@ -98,9 +98,6 @@
     <canvas id="canvas" style="display:none;"></canvas>
     <div id="ga-svg-cont" class="ga-svg-cont">
       <svg xmlns="http://www.w3.org/2000/svg" version="1.1" onclick="open_dialog_svg(this)" style=";background: <%= album_exist(@album, @album_details) == false ? "url('#{@svg_background.blank? ? nil : @svg_background.photo.url}') no-repeat" : '' %>; background-size: 900px" height="475" width="800" id="templates-container">
-        <text x="180" y="68" font-family="Verdana" font-size="55" fill="blue" class="drag">
-            Hello, out there
-          </text>
         <% if album_exist(@album, @album_details) %>
             <% @shapes.each_with_index do |s, i| %>
                 <g mask="url('#SvgMask_<%= i + 1 %>')">
@@ -153,6 +150,18 @@
                 </defs>
             <% end %>
         <% end %>
+
+        <switch>
+          <foreignObject x="220" y="17" width="220" height="52">
+            <p xmlns="http://www.w3.org/1999/xhtml" id='ga-placeholder' style="font-size: 25px; font-family: verdana"><%= album_exist(@album, @album_details) == true ? 'Text goes here' : @svg_text.text %></p>
+            <textArea font-family="Verdana" font-size="55" fill="blue" id="ga-textarea" style="display: none" x="3" y="27" width="150" height="20" font-size="18" font-family="Arial"
+                      placeholder="text..." editable="simple" focusable="true" pointer-events="boundingBox">
+              <%= album_exist(@album, @album_details) == true ? nil : @svg_text.text %>  </textArea>
+          </foreignObject>
+
+          <text x="20" y="20">Your SVG viewer cannot display html.</text>
+        </switch>
+
       </svg>
     </div>
     <% if album_exist(@album, @album_details) %>
@@ -167,6 +176,7 @@
             <%= hidden_field_tag "top#{ c + 1}", s.image_y %>
         <% end %>
         <%= hidden_field_tag "shapes_count", @shapes.count %>
+        <%= hidden_field_tag "text", nil %>
 
     <% else %>
         <% @album_details.each_with_index do |s, c| %>
@@ -180,6 +190,7 @@
             <%= hidden_field_tag "top#{ c + 1}", s.top %>
         <% end %>
         <%= hidden_field_tag "shapes_count", @album_details.count %>
+        <%= hidden_field_tag "text", @svg_text.text %>
     <% end %>
     <%= hidden_field_tag "page", params[:page].blank? ? 1 : params[:page] %>
     <%= file_field_tag "file_openersvg-index", :class => "file_opener", :style => "display: none" %>
@@ -224,13 +235,40 @@
     });
 
     $(document).mouseup(function (e) {
+        window.getSelection();
         var container = $("#ga-svg-cont");
-
+        var text_container = $('#ga-textarea')
         if (!container.is(e.target) // if the target of the click isn't the container...
                 && container.has(e.target).length === 0) // ... nor a descendant of the container
         {
             $('#ga-svg-cont').find('.ga-shadow').attr('class', 'drag ga-svg');
             $('#slider-container').hide();
         }
+        if (!text_container.is(e.target) // if the target of the click isn't the container...
+                && text_container.has(e.target).length === 0) // ... nor a descendant of the container
+        {
+            var textarea = document.getElementById("ga-textarea");
+            var start = textarea.selectionStart;
+            var end = textarea.selectionEnd;
+            var sel = textarea.value.substring(start, end);
+
+            value = $('#ga-textarea').val();
+            if (value != '') {
+                $('#ga-placeholder').html(value);
+                $('#ga-textarea').toggle();
+                $('#ga-placeholder').toggle();
+                $('#text').val(value);
+            }
+        }
+
+    });
+
+
+    $('#ga-placeholder,#ga-textarea').bind('click', function (e) {
+        e.stopPropagation();
+        $(this).hide();
+        $('#ga-textarea').show();
+
     });
 </script>
+
