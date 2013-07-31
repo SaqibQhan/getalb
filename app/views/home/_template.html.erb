@@ -21,12 +21,16 @@
 
 <script type="text/javascript">
     function download_svg() {
-        svg = $('#ga-svg-cont').html();
-//       WORKING svg = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1"  height="475" width="800"><circle stroke-width="2" fill="url(#img1)" stroke="black" width="" height="" r="55" cy="70" cx="730" id="circle1" x="730" y="70" class="ga-svg droppable" alt="1"></circle></svg>'
-        canvg('canvas', svg);
-        canvas = document.getElementById("canvas");
-        img_PNG = Canvas2Image.saveAsPNG(canvas);
-
+        content = $("#ga-svg-cont").html();
+        filtered_content = content.replace(/>\s+/g, ">").replace(/\s+</g, "<").replace(/<canvas.+/g, ""); // remove spaces before tags
+        filtered_content = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="700" height="700" style="background: url(/assets/rails.png)" >' +
+                '</svg>'
+        canvg('canvas', filtered_content);
+        // the canvas calls to output a png
+        var canvas = document.getElementById("canvas");
+        var img = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+//        window.location.href=img;
+        open(img)
     }
 
     $(function () {
@@ -95,7 +99,7 @@
 
 
 <%= form_for :album, :url => "albumes/#{album_exist(@album, @album_details) == true ? 'create_album' : 'update_album'}?template_id=#{@template.id}&new_album=#{@album.new_record? ? nil : @album.id}", :html => {:multipart => true} do |f| %>
-    <canvas id="canvas" style="display:none;"></canvas>
+    <canvas id="canvas" style="display:none;" width='200' height='200'></canvas>
     <div id="ga-svg-cont" class="ga-svg-cont">
       <svg xmlns="http://www.w3.org/2000/svg" version="1.1" onclick="open_dialog_svg(this)" style=";background: <%= album_exist(@album, @album_details) == false ? "url('#{@svg_background.blank? ? nil : @svg_background.photo.url}') no-repeat" : '' %>; background-size: 900px" height="475" width="800" id="templates-container">
         <% if album_exist(@album, @album_details) %>
