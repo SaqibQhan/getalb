@@ -18,19 +18,39 @@
 
   <div id="slider_scale" class="ga-slider"></div>
 </div>
-
 <script type="text/javascript">
     function download_svg() {
-        content = $("#ga-svg-cont").html();
-        filtered_content = content.replace(/>\s+/g, ">").replace(/\s+</g, "<").replace(/<canvas.+/g, ""); // remove spaces before tags
-        filtered_content = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="700" height="700" style="background: url(/assets/rails.png)" >' +
-                '</svg>'
-        canvg('canvas', filtered_content);
-        // the canvas calls to output a png
-        var canvas = document.getElementById("canvas");
-        var img = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-//        window.location.href=img;
+//        var svg_XML_NoSpace = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="1024" height="768">' +
+//                '<image mask="url(#SvgMask_8)" height="160" width="160" xlink:href="/system/album_details/photos/000/000/005/original/734524_491210034275007_1480240168_n.jpg" id="SvgImage_1" class="drag" x="668.0" y="0.0" style="left: 668.0px; ;position: relative; top: 0.0px" transform="rotate(0 732 85) scale(1.0)"/>' +
+//                '<defs id="SvgDefs_8">' +
+//                '<mask id="SvgMask_8">' +
+//                '<circle onclick="open_dialog(this)" alt="1" class="ga-svg ga-svg-1" y="70" x="730" cx="730" cy="70" id="circle1" r="55" height="" width="" stroke="white" fill="#ffffff" stroke-width="2"/>' +
+//                '</mask>' +
+//                '</defs>' +
+//                '</svg>';
+
+        var svg_XML_NoSpace =  $("#ga-svg-cont").html().replace(/>\s+/g, ">").replace(/\s+</g, "<");
+        //add canvas into body
+        var canvasID = "canvas";
+        var canvas = document.createElement('canvas');
+        canvas.id = canvasID;
+        document.body.appendChild(canvas);
+
+        //convert svg to canvas
+        canvg(document.getElementById(canvasID), svg_XML_NoSpace, {
+            ignoreMouse: true, ignoreAnimation: true,
+            renderCallback: function () {
+                //save canvas as image
+                Canvas2Image.saveAsPNG(document.getElementById(canvasID));
+            }
+        });
+    }
+
+    function saveDaPicture() {
+        var img = document.getElementById('canvas').toDataURL("image/png");
+        $('body').append('<img src="' + img + '"/>');
         open(img)
+//        Canvas2Image.saveAsPNG(document.getElementById('canvas'));
     }
 
     $(function () {
@@ -101,7 +121,7 @@
 <%= form_for :album, :url => "albumes/#{album_exist(@album, @album_details) == true ? 'create_album' : 'update_album'}?template_id=#{@template.id}&new_album=#{@album.new_record? ? nil : @album.id}", :html => {:multipart => true} do |f| %>
     <canvas id="canvas" style="display:none;" width='200' height='200'></canvas>
     <div id="ga-svg-cont" class="ga-svg-cont">
-      <svg xmlns="http://www.w3.org/2000/svg" version="1.1" onclick="open_dialog_svg(this)" style=";background: <%= album_exist(@album, @album_details) == false ? "url('#{@svg_background.blank? ? nil : @svg_background.photo.url}') no-repeat" : '' %>; background-size: 900px" height="475" width="800" id="templates-container">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" onclick="open_dialog_svg(this)" style=";background: <%= album_exist(@album, @album_details) == false ? "url('#{@svg_background.blank? ? nil : @svg_background.photo.url}') no-repeat" : '' %>; background-size: 900px" height="475" width="800" id="templates-container">
         <% if album_exist(@album, @album_details) %>
             <% @shapes.each_with_index do |s, i| %>
                 <g mask="url('#SvgMask_<%= i + 1 %>')">
