@@ -8,7 +8,9 @@
   <%= render "shared/images_select" %>
 </div>
 <!-- Modal end -->
-<%= link_to "Download", "javascript:", :onclick => "download_svg()" %>
+<% if !album_exist(@album, @album_details) %>
+    <%= link_to "Download", "javascript:", :onclick => "download_svg()" %>
+<% end %>
 <%= render "home/template_js" %>
 <div id="slider-container" style="display: none">
   <label> Rotate </label>
@@ -18,6 +20,7 @@
 
   <div id="slider_scale" class="ga-slider"></div>
 </div>
+
 <script type="text/javascript">
     function download_svg() {
 //        var svg_XML_NoSpace = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="1024" height="768">' +
@@ -29,7 +32,7 @@
 //                '</defs>' +
 //                '</svg>';
 
-        var svg_XML_NoSpace =  $("#ga-svg-cont").html().replace(/>\s+/g, ">").replace(/\s+</g, "<");
+        var svg_XML_NoSpace = $("#ga-svg-cont").html().replace(/>\s+/g, ">").replace(/\s+</g, "<");
         //add canvas into body
         var canvasID = "canvas";
         var canvas = document.createElement('canvas');
@@ -48,7 +51,7 @@
 
     function saveDaPicture() {
         var img = document.getElementById('canvas').toDataURL("image/png");
-        $('body').append('<img src="' + img + '"/>');
+//        $('body').append('<img src="' + img + '"/>');
         open(img)
 //        Canvas2Image.saveAsPNG(document.getElementById('canvas'));
     }
@@ -116,12 +119,26 @@
 
     });
 </script>
-
-
 <%= form_for :album, :url => "albumes/#{album_exist(@album, @album_details) == true ? 'create_album' : 'update_album'}?template_id=#{@template.id}&new_album=#{@album.new_record? ? nil : @album.id}", :html => {:multipart => true} do |f| %>
     <canvas id="canvas" style="display:none;" width='200' height='200'></canvas>
     <div id="ga-svg-cont" class="ga-svg-cont">
-      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" onclick="open_dialog_svg(this)" style=";background: <%= album_exist(@album, @album_details) == false ? "url('#{@svg_background.blank? ? nil : @svg_background.photo.url}') no-repeat" : '' %>; background-size: 900px" height="475" width="800" id="templates-container">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" style="" height="475" width="800" id="templates-container">
+
+        <!--<defs>-->
+        <!--<pattern id="image" x="0" y="0" height="1" width="1">-->
+        <!--<image x="0" y="0" width="880" height="660" xlink:href="<%#= album_exist(@album, @album_details) == false ? @svg_background.photo.url : nil %>"></image>-->
+        <!--</pattern>-->
+        <!--</defs>-->
+        <!--<rect width="100%" height="100%" fill="url(#image)"/>-->
+
+        <image id="SvgImage_svg" xlink:href="<%= album_exist(@album, @album_details) == false ? @svg_background.photo.url : nil %>" width="880" height="660" x="0" y="0" cx="0" cy="0" mask="url('#SvgMask_svg')"></image>
+        <defs id="SvgDefs_svg">
+          <mask id="SvgMask_svg">
+            <rect stroke-width="2" fill="#ffffff" stroke="white" width="880" height="660" id="svg-back-fill" onclick="open_dialog_svg(this)"></rect>
+          </mask>
+        </defs>
+        <rect style="display: <%= album_exist(@album, @album_details) == false ? 'none':'block'%> " stroke-width="2" fill="#777777" stroke="white" width="880" height="660" id="svg-back" onclick="open_dialog_svg(this)"></rect>
+
         <% if album_exist(@album, @album_details) %>
             <% @shapes.each_with_index do |s, i| %>
                 <g mask="url('#SvgMask_<%= i + 1 %>')">
@@ -259,7 +276,7 @@
     });
 
     $(document).mouseup(function (e) {
-        window.getSelection();
+//        window.getSelection();  // selected text
         var container = $("#ga-svg-cont");
         var text_container = $('#ga-textarea')
         if (!container.is(e.target) // if the target of the click isn't the container...
@@ -279,8 +296,8 @@
             value = $('#ga-textarea').val();
             if (value != '') {
                 $('#ga-placeholder').html(value);
-                $('#ga-textarea').toggle();
-                $('#ga-placeholder').toggle();
+                $('#ga-textarea').hide();
+                $('#ga-placeholder').show();
                 $('#text').val(value);
             }
         }
@@ -288,8 +305,8 @@
     });
 
 
-    $('#ga-placeholder,#ga-textarea').bind('click', function (e) {
-        e.stopPropagation();
+    $('#ga-placeholder').bind('click', function (e) {
+//        e.stopPropagation();
         $(this).hide();
         $('#ga-textarea').show();
 

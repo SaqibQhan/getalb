@@ -106,8 +106,10 @@ window.choose_fb_image = (photo) ->
     $('#image_type' + index).val('fb')
     $('#fb_url' + index).val(photo)
   else
-    $('#templates-container').css('background', "url('" + photo + "') no-repeat").css('background-size', '900px');
-    $('#templates-container').attr('onclick', '');
+#    $('#templates-container').css('background', "url('" + photo + "') no-repeat").css('background-size', '900px');
+    $('#SvgImage_svg').attr('xlink:href', photo);
+    clicked = $('#clicked').val()
+    $('#' + clicked).hide();
     $('#clicked').val('');
     $('#svg_image_type').val('fb')
     $('#svg_fb_url').val(photo)
