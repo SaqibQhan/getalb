@@ -93,9 +93,9 @@
         }
 
         $("#slider_scale").slider({
-            value: .9,
+            value: 1,
             min: .1,
-            max: .9,
+            max: 1,
             step: .01,
             slide: function (event, ui) {
                 rotate_pos = $("#slider_rotate").slider("value");
@@ -119,6 +119,21 @@
 
     });
 </script>
+
+<!--<svg style="width: 890px; height: 600px; background: red">-->
+  <!--<g transform="scale(0.9)" width="200" height="200">-->
+    <!--<g mask="url('#SvgMask_14')">-->
+      <!--<image height="160" width="160" xlink:href="https://fbcdn-sphotos-b-a.akamaihd.net/hphotos-ak-ash4/479714_364815596914452_422917152_n.jpg" id="img_1" class="drag" cx="668" cy="0" x="668" y="0" style="left: 668px; ;position: relative; top: 0px" transform="scale(0.9) rotate(0 0 0)"/>-->
+    <!--</g>-->
+  <!--</g>-->
+
+  <!--<defs id="SvgDefs_14">-->
+    <!--<mask id="SvgMask_14">-->
+      <!--<circle onclick="open_dialog(this)" alt="1" class="ga-svg ga-svg-1" y="70" x="730" cx="730" cy="70" id="Svg_circle1" r="55" height="" width="" stroke="white" fill="#ffffff" stroke-width="2"/>-->
+    <!--</mask>-->
+  <!--</defs>-->
+<!--</svg>-->
+
 <%= form_for :album, :url => "albumes/#{album_exist(@album, @album_details) == true ? 'create_album' : 'update_album'}?template_id=#{@template.id}&new_album=#{@album.new_record? ? nil : @album.id}", :html => {:multipart => true} do |f| %>
     <canvas id="canvas" style="display:none;" width='200' height='200'></canvas>
     <div id="ga-svg-cont" class="ga-svg-cont">
@@ -195,9 +210,7 @@
         <switch>
           <foreignObject x="220" y="17" width="220" height="52">
             <p xmlns="http://www.w3.org/1999/xhtml" id='ga-placeholder' style="font-size: 25px; font-family: verdana"><%= album_exist(@album, @album_details) == true ? 'Text goes here' : @svg_text.text %></p>
-            <textArea font-family="Verdana" font-size="55" fill="blue" id="ga-textarea" style="display: none" x="3" y="27" width="150" height="20" font-size="18" font-family="Arial"
-                      placeholder="text..." editable="simple" focusable="true" pointer-events="boundingBox">
-              <%= album_exist(@album, @album_details) == true ? nil : @svg_text.text %>  </textArea>
+            <textArea font-family="Verdana" font-size="55" fill="blue" id="ga-textarea" style="display: none" x="3" y="27" width="150" height="20" font-size="18" font-family="Arial" placeholder="text..." editable="simple" focusable="true" pointer-events="boundingBox"><%= album_exist(@album, @album_details) == true ? nil : @svg_text.text %></textArea>
           </foreignObject>
 
           <text x="20" y="20">Your SVG viewer cannot display html.</text>
@@ -288,13 +301,13 @@
         if (!text_container.is(e.target) // if the target of the click isn't the container...
                 && text_container.has(e.target).length === 0) // ... nor a descendant of the container
         {
-            var textarea = document.getElementById("ga-textarea");
-            var start = textarea.selectionStart;
-            var end = textarea.selectionEnd;
-            var sel = textarea.value.substring(start, end);
+//            var textarea = document.getElementById("ga-textarea");
+//            var start = textarea.selectionStart;
+//            var end = textarea.selectionEnd;
+//            var sel = textarea.value.substring(start, end);
 
             value = $('#ga-textarea').val();
-            if (value != '') {
+            if (value != '' && value != null) {
                 $('#ga-placeholder').html(value);
                 $('#ga-textarea').hide();
                 $('#ga-placeholder').show();
