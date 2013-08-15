@@ -92,47 +92,8 @@
             $('#scale' + index).val(scale);
         }
 
-        $("#slider_scale").slider({
-            value: 1,
-            min: .1,
-            max: 1,
-            step: .01,
-            slide: function (event, ui) {
-                rotate_pos = $("#slider_rotate").slider("value");
-                scale_pos = $("#slider_scale").slider("value");
-                index = $('#selected').val();
-                $('#scale' + index).val(scale_pos);
-                if (index == 1) {
-                    $('#img_' + index).attr('transform', "rotate(" + rotate_pos + " 732 85) scale(" + scale_pos + ")");
-                }
-                else if (index == 2) {
-                    $('#img_' + index).attr('transform', "rotate(" + rotate_pos + " 400 200) scale(" + scale_pos + ")");
-                }
-                else if (index == 3) {
-                    $('#img_' + index).attr('transform', "rotate(" + rotate_pos + " 60 100) scale(" + scale_pos + ")");
-                }
-            },
-            stop: function (event, ui) {
-                rotate_slide();
-            }
-        });
-
     });
 </script>
-
-<!--<svg style="width: 890px; height: 600px; background: red">-->
-  <!--<g transform="scale(0.9)" width="200" height="200">-->
-    <!--<g mask="url('#SvgMask_14')">-->
-      <!--<image height="160" width="160" xlink:href="https://fbcdn-sphotos-b-a.akamaihd.net/hphotos-ak-ash4/479714_364815596914452_422917152_n.jpg" id="img_1" class="drag" cx="668" cy="0" x="668" y="0" style="left: 668px; ;position: relative; top: 0px" transform="scale(0.9) rotate(0 0 0)"/>-->
-    <!--</g>-->
-  <!--</g>-->
-
-  <!--<defs id="SvgDefs_14">-->
-    <!--<mask id="SvgMask_14">-->
-      <!--<circle onclick="open_dialog(this)" alt="1" class="ga-svg ga-svg-1" y="70" x="730" cx="730" cy="70" id="Svg_circle1" r="55" height="" width="" stroke="white" fill="#ffffff" stroke-width="2"/>-->
-    <!--</mask>-->
-  <!--</defs>-->
-<!--</svg>-->
 
 <%= form_for :album, :url => "albumes/#{album_exist(@album, @album_details) == true ? 'create_album' : 'update_album'}?template_id=#{@template.id}&new_album=#{@album.new_record? ? nil : @album.id}", :html => {:multipart => true} do |f| %>
     <canvas id="canvas" style="display:none;" width='200' height='200'></canvas>
@@ -159,10 +120,53 @@
                 <g mask="url('#SvgMask_<%= i + 1 %>')">
                   <image transform="<%= i == 0 ? 'rotate(0 732 85)' : i== 1 ? 'rotate(0 400 200)' : 'rotate(0 60 100)' %> " style="left: <%= s.image_x %>px; ;position: relative; top: <%= s.image_y %>px" y="<%= s.image_y %>" x="<%= s.image_x %>" cy="<%= s.image_y %>" cx="<%= s.image_x %>" class="drag" id="SvgImage_<%= i + 1 %>" xlink:href="" width="<%= s.image_width %>" height="<%= s.image_height %>"/>
                 </g>
+
+                <script type="text/javascript">
+                    $("#slider_scale").slider({
+                        value: <%= s.image_width %>,
+                        min: 10,
+                        max: <%= s.image_width %>,
+                        step: 10,
+                        start: function (event, ui) {
+                            // ui.value is the starting value
+                            start = ui.value;
+                        },
+                        slide: function (event, ui) {
+                            rotate_pos = $("#slider_rotate").slider("value");
+                            scale_pos = $("#slider_scale").slider("value");
+                            index = $('#selected').val();
+                            width = parseInt($('#img_' + index).attr('width'));
+                            $('#scale' + index).val(scale_pos);
+                            if (ui.value > start) {
+                                $('#img_' + index).attr('width', width + 10);
+                            }
+                            else {
+                                $('#img_' + index).attr('width', width - 10);
+
+                            }
+                        },
+                        stop: function (event, ui) {
+//                            rotate_slide();
+                            index = $('#selected').val();
+                            width = parseInt($('#img_' + index).attr('width'));
+                            $('#scale' + index).val(width);
+
+                        }
+                    });
+
+                    function rotate_slide() {
+                        index = $('#selected').val();
+                        transform = $('#img_' + index).attr('transform');
+                        scale = transform.split('scale(')[1].replace(')', '');
+                        rotate = transform.split(' ')[0].replace('rotate', '').replace('(', '').replace(')', '').split(' ')[0];
+                        $('#image' + index).val(rotate);
+                        $('#scale' + index).val(scale);
+                    }
+                </script>
             <% end %>
         <% else %>
             <% @album_details.each_with_index do |s, i| %>
-                <image transform='<%= i == 0 ? "rotate(#{s.rotate} 732 85)" : i== 1 ? "rotate(#{s.rotate} 400 200)" : "rotate(#{s.rotate} 60 100)" %> scale(<%= s.scale %>)' style="left: <%= s.left %>px; ;position: relative; top: <%= s.top %>px" y="<%= s.top %>" x="<%= s.left %>" class="drag" id="SvgImage_<%= i + 1 %>" xlink:href="<%= s.photo.url %>" width="<%= s.shape.image_width %>" height="<%= s.shape.image_height %>" mask="url('#SvgMask_<%= i + 1 %>')"/>
+                <image transform='<%= i == 0 ? "rotate(#{s.rotate} 732 85)" : i== 1 ? "rotate(#{s.rotate} 400 200)" : "rotate(#{s.rotate} 60 100)" %>' style="left: <%= s.left %>px; ;position: relative; top: <%= s.top %>px" y="<%= s.top %>" x="<%= s.left %>" class="drag" id="SvgImage_<%= i + 1 %>" xlink:href="<%= s.photo.url %>" width="<%= s.scale %>" height="<%= s.shape.image_height %>" mask="url('#SvgMask_<%= i + 1 %>')"/>
             <% end %>
         <% end %>
         <% if album_exist(@album, @album_details) %>
@@ -221,7 +225,7 @@
     <% if album_exist(@album, @album_details) %>
         <% @shapes.each_with_index do |s, c| %>
             <%= hidden_field_tag "image#{ c + 1}", 0 %>
-            <%= hidden_field_tag "scale#{ c + 1}", 1 %>
+            <%= hidden_field_tag "scale#{ c + 1}", s.image_width %>
             <%= file_field_tag "file_opener#{ c + 1}", :class => "file_opener", :style => "display: none" %>
             <%= hidden_field_tag "image_type#{ c + 1}" "" %>
             <%= hidden_field_tag "shape_id#{ c + 1}", s.id %>
