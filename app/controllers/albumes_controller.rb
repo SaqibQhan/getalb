@@ -41,7 +41,8 @@ class AlbumesController < ApplicationController
     svg_text = SvgText.new(:text => params[:text], :page => params[:page], :album_id => album.id)
     svg_text.save
 
-    redirect_to "/index?id=#{album.id}&page=#{ params[:page].to_i + 1}"
+    redirect_to "/index?id=#{album.id}&page=#{ params[:page].to_i + 1}" if params[:page].to_i + 1 < album.num_of_pages
+    redirect_to "/" if params[:page].to_i + 1 > album.num_of_pages
   end
 
   def update_album
@@ -64,7 +65,8 @@ class AlbumesController < ApplicationController
     svg_text = SvgText.find_by_album_id_and_page(album.id, params[:page])
     svg_text.update_attributes(:text => params[:text])
 
-    redirect_to "/index?id=#{album.id}&page=#{ params[:page].to_i + 1}"
+    redirect_to "/index?id=#{album.id}&page=#{ params[:page].to_i + 1}" if params[:page].to_i + 1 < album.num_of_pages
+    redirect_to "/" if params[:page].to_i + 1 > album.num_of_pages
   end
 
 
