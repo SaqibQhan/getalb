@@ -23,6 +23,7 @@
 
 <script type="text/javascript">
     function download_svg() {
+
 //        var svg_XML_NoSpace = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="1024" height="768">' +
 //                '<image mask="url(#SvgMask_8)" height="160" width="160" xlink:href="/system/album_details/photos/000/000/005/original/734524_491210034275007_1480240168_n.jpg" id="SvgImage_1" class="drag" x="668.0" y="0.0" style="left: 668.0px; ;position: relative; top: 0.0px" transform="rotate(0 732 85) scale(1.0)"/>' +
 //                '<defs id="SvgDefs_8">' +
@@ -31,7 +32,10 @@
 //                '</mask>' +
 //                '</defs>' +
 //                '</svg>';
-
+        switch_text = $('#switch-text');
+        text = $('#switch-text').find('p').text();
+        //                $('#switch-text').remove();
+        $('#ga-user-text').html(text);
         var svg_XML_NoSpace = $("#ga-svg-cont").html().replace(/>\s+/g, ">").replace(/\s+</g, "<");
         //add canvas into body
         var canvasID = "canvas";
@@ -45,6 +49,10 @@
             renderCallback: function () {
                 //save canvas as image
                 Canvas2Image.saveAsPNG(document.getElementById(canvasID));
+//                $('#ga-user-text').html('');
+//                $('#ga-user-text').append(switch_text);
+
+
             }
         });
     }
@@ -210,8 +218,8 @@
                 </defs>
             <% end %>
         <% end %>
-
-        <switch>
+        <text id='ga-user-text' x="220" y="37" style="font-size: 25px; font-family: verdana"></text>
+        <switch id="switch-text">
           <foreignObject x="220" y="17" width="220" height="52">
             <p xmlns="http://www.w3.org/1999/xhtml" id='ga-placeholder' style="font-size: 25px; font-family: verdana"><%= album_exist(@album, @album_details) == true ? 'Text goes here' : @svg_text.text %></p>
             <textArea font-family="Verdana" font-size="55" fill="blue" id="ga-textarea" style="display: none" x="3" y="27" width="150" height="20" font-size="18" font-family="Arial" placeholder="text..." editable="simple" focusable="true" pointer-events="boundingBox"><%= album_exist(@album, @album_details) == true ? nil : @svg_text.text %></textArea>
@@ -254,7 +262,6 @@
     <%= file_field_tag "file_openersvg-index", :class => "file_opener", :style => "display: none" %>
     <%= hidden_field_tag "svg_fb_url", "" %>
     <%= hidden_field_tag "svg_image_type", "" %>
-
     <%= f.submit "#{album_exist(@album, @album_details) == true ? 'Save & Next' : 'Update & Next' }", :class => "btn btn-primary" %>
 <% end %>
 <script>
