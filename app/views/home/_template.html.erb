@@ -77,13 +77,13 @@
                 $('#image' + index).val(rotate_pos);
 //                $('#Svg_circle1').attr('transform', "rotate(" + rotate_pos + " 50 50) scale(" + scale_pos + ")");
                 if (index == 1) {
-                    $('#img_' + index).attr('transform', "rotate(" + rotate_pos + " 732 85) scale(" + scale_pos + ")");
+                    $('#img_' + index).attr('transform', "rotate(" + rotate_pos + " 732 85)");
                 }
                 else if (index == 2) {
-                    $('#img_' + index).attr('transform', "rotate(" + rotate_pos + " 400 200) scale(" + scale_pos + ")");
+                    $('#img_' + index).attr('transform', "rotate(" + rotate_pos + " 400 200)");
                 }
                 else if (index == 3) {
-                    $('#img_' + index).attr('transform', "rotate(" + rotate_pos + " 60 100) scale(" + scale_pos + ")");
+                    $('#img_' + index).attr('transform', "rotate(" + rotate_pos + " 60 100)");
                 }
             },
             stop: function (event, ui) {
@@ -96,6 +96,7 @@
             transform = $('#img_' + index).attr('transform');
             scale = transform.split('scale(')[1].replace(')', '');
             rotate = transform.split(' ')[0].replace('rotate', '').replace('(', '').replace(')', '').split(' ')[0];
+
             $('#image' + index).val(rotate);
             $('#scale' + index).val(scale);
         }
